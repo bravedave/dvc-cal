@@ -40,8 +40,8 @@ class reader {
 
           $reader->append([
             'summary' => $event->summary,
-            'start' => date('d-m-Y H:i', $ical->iCalDateToUnixTimestamp($event->dtstart)),
-            'end' => date('d-m-Y H:i', $ical->iCalDateToUnixTimestamp($event->dtend)),
+            'start' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtstart)),
+            'end' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtend)),
             'startUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtstart)),
             'endUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtend)),
             'location' => $event->location,
