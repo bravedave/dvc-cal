@@ -4,6 +4,6 @@
 
 #### Install (untested)
    ```
-   composer config repositories.bravedave git https://github.com/bravedave/dvc-cal
+   composer config repositories.0 git https://github.com/bravedave/dvc-cal
    composer require bravedave/dvc-cal
    ```
