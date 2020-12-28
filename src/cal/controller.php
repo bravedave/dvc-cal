@@ -66,7 +66,8 @@ class controller extends \Controller {
         $start = $this->getPost('start');
         $end = $this->getPost('end');
 
-        $reader = reader::readICS( $path);
+        // $reader = reader::readICS( $path);
+        $reader = reader::ICSString( file_get_contents( $path));
         $feed = $reader->feed( $start, $end);
 
         Json::ack( $action)

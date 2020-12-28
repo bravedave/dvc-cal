@@ -34,7 +34,7 @@ class config extends dvc\config {
 
         ]
 
-        ];
+      ];
 
       Json::write( $feeds, (object)$feed);
       return $feed;

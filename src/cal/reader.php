@@ -18,50 +18,80 @@ class reader {
 
   protected function __construct() {}
 
-  static public function readICS( $path) : self {
-    try {
-        $ical = new ICal( $path, array(
-            'defaultSpan'                 => 2,     // Default value
-            'defaultTimeZone'             => 'UTC',
-            'defaultWeekStart'            => 'MO',  // Default value
-            'disableCharacterReplacement' => false, // Default value
-            'filterDaysAfter'             => null,  // Default value
-            'filterDaysBefore'            => null,  // Default value
-            'skipRecurrence'              => false, // Default value
-        ));
-        // $ical->initFile('ICal.ics');
-        // $ical->initUrl('https://raw.githubusercontent.com/u01jmg3/ics-parser/master/examples/ICal.ics', $username = null, $password = null, $userAgent = null);
+  static public function ICSString( string $string) : self {
+    $ical = new ICal( false, [
+        'defaultSpan'                 => 2,     // Default value
+        'defaultTimeZone'             => 'UTC',
+        'defaultWeekStart'            => 'MO',  // Default value
+        'disableCharacterReplacement' => false, // Default value
+        'filterDaysAfter'             => null,  // Default value
+        'filterDaysBefore'            => null,  // Default value
+        'skipRecurrence'              => false, // Default value
+    ]);
+    $ical->initString( $string);
 
-        $reader = new self;
+    $reader = new self;
 
-        foreach ( $ical->events() as $event) {
-          $description = str_replace( '\n', PHP_EOL, $event->description);
-          $description = str_replace( '\,', ',', $description);
+    foreach ( $ical->events() as $event) {
+      $description = str_replace( '\n', PHP_EOL, $event->description);
+      $description = str_replace( '\,', ',', $description);
 
-          $reader->append([
-            'summary' => $event->summary,
-            'start' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtstart)),
-            'end' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtend)),
-            'startUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtstart)),
-            'endUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtend)),
-            'location' => $event->location,
-            'description' => $description,
-            'data' => $event->printData()
+      $reader->append([
+        'summary' => $event->summary,
+        'start' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtstart)),
+        'end' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtend)),
+        'startUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtstart)),
+        'endUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtend)),
+        'location' => $event->location,
+        'description' => $description,
+        'data' => $event->printData()
 
-          ]);
-
-        }
-
-        return $reader;
-
-    } catch (\Exception $e) {
-        die($e);
+      ]);
 
     }
 
+    return $reader;
+
   }
 
-  static public function readJSON( $path) : self {
+  static public function readICS( string $path) : self {
+    $ical = new ICal( $path, [
+        'defaultSpan'                 => 2,     // Default value
+        'defaultTimeZone'             => 'UTC',
+        'defaultWeekStart'            => 'MO',  // Default value
+        'disableCharacterReplacement' => false, // Default value
+        'filterDaysAfter'             => null,  // Default value
+        'filterDaysBefore'            => null,  // Default value
+        'skipRecurrence'              => false, // Default value
+    ]);
+    // $ical->initFile('ICal.ics');
+    // $ical->initUrl('https://raw.githubusercontent.com/u01jmg3/ics-parser/master/examples/ICal.ics', $username = null, $password = null, $userAgent = null);
+
+    $reader = new self;
+
+    foreach ( $ical->events() as $event) {
+      $description = str_replace( '\n', PHP_EOL, $event->description);
+      $description = str_replace( '\,', ',', $description);
+
+      $reader->append([
+        'summary' => $event->summary,
+        'start' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtstart)),
+        'end' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtend)),
+        'startUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtstart)),
+        'endUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtend)),
+        'location' => $event->location,
+        'description' => $description,
+        'data' => $event->printData()
+
+      ]);
+
+    }
+
+    return $reader;
+
+  }
+
+ static public function readJSON( string $path) : self {
     try {
         $json = json_decode( \file_get_contents( $path));
         $reader = new self;
