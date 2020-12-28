@@ -11,7 +11,7 @@
 namespace dvc\cal;
 
 use ICal\ICal;
-
+use DateTime;
 class reader {
 
   protected $_feed = [];
@@ -47,6 +47,49 @@ class reader {
             'location' => $event->location,
             'description' => $description,
             'data' => $event->printData()
+
+          ]);
+
+        }
+
+        return $reader;
+
+    } catch (\Exception $e) {
+        die($e);
+
+    }
+
+  }
+
+  static public function readJSON( $path) : self {
+    try {
+        $json = json_decode( \file_get_contents( $path));
+        $reader = new self;
+
+        foreach ( $json as $event) {
+          /* {
+            "title":"Daily Meeting Team D'Arcy",
+            "location":"",
+            "notes":"",
+            "start":"2020-12-02T08:30:00+10:00",
+            "end":"2020-12-02T08:45:00+10:00",
+            "id":"AAMkADY4OGM5MWMwLTVhY2ItNGFkZi1hMmFkLTY4OTllN2M2YzEzNgFRAAgI2JZVNkgAAEYAAAAAIf0Q0BV1j0KWt+MMJasV4wcAea7WiVlW9kei4Ra+phJGNQAAAOK4RAAAea7WiVlW9kei4Ra+phJGNQAAOEhUpgAAEA==",
+            "allDay":false,
+            "changekey":"DwAAABYAAAB5rtaJWVb2R6LhFr6mEkY1AAA4d8DN"
+          } */
+
+          $start = new DateTime( $event->start);
+          $end = new DateTime( $event->end);
+
+          $reader->append([
+            'summary' => $event->title,
+            'start' => $start->format('Y-m-d H:i'),
+            'end' => $end->format('Y-m-d H:i'),
+            'startUTC' => $start->format('c'),
+            'endUTC' => $end->format('c'),
+            'location' => $event->location,
+            'description' => $event->notes,
+            'id' => $event->id
 
           ]);
 

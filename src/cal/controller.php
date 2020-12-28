@@ -17,6 +17,8 @@ use strings;
 class controller extends \Controller {
   protected $viewPath = __DIR__ . '/views/';
 
+  protected $feeds = [];  // unless you populate this it won't work ...
+
 	protected function _index() {
     $start = date( 'Y-m-d');
     $end = date( 'Y-m-d', strtotime( '+7 days'));
@@ -39,9 +41,8 @@ class controller extends \Controller {
     $action = $this->getPost('action');
 
 		if ( 'get-active-feeds' == $action) {
-      $feeds = config::dvc_cal_feeds();
       $a = [];
-      foreach ($feeds as $feed) {
+      foreach ($this->feeds as $feed) {
         if ( 'yes' == currentUser::option( 'cal-feed-' . $feed->name)) {
           $a[] = $feed;
 
@@ -104,6 +105,25 @@ class controller extends \Controller {
     ];
 
     $this->load( 'agenda');
+
+  }
+
+  public function month() {
+    $seed = $this->getParam( 'seed');
+    if ( strtotime( $seed) < 1) {
+      $seed = date( 'Y-m-d');
+
+    }
+
+    $time = strtotime( $seed);
+    $seed = date( 'Y-m-01', $time);
+
+    $this->data = (object)[
+      'seed' => $seed
+
+    ];
+
+    $this->load( 'month');
 
   }
 

@@ -13,8 +13,10 @@ namespace dvc\cal;
 use strings;
 
 $_accordion = strings::rand();  ?>
-
-<nav>
+<style>
+@media print{@page {size: landscape}}
+</style>
+<nav class="d-print-none">
   <div class="nav nav-tabs" role="tablist" id="<?= $_accordion ?>-tablist">
     <div class="nav-item">
       <div class="input-group">
@@ -30,15 +32,15 @@ $_accordion = strings::rand();  ?>
 
     </div>
 
-    <a class="nav-link small ml-auto" data-toggle="tab" href="#<?= $_accordion ?>-agenda-tab" id="<?= $_accordion ?>-agenda" aria-selected="true" aria-controls="<?= $_accordion ?>-agenda-tab">
+    <a class="nav-link d-none d-lg-block small ml-auto" data-toggle="tab" data-format="agenda" href="#<?= $_accordion ?>-agenda-tab" id="<?= $_accordion ?>-agenda" aria-selected="true" aria-controls="<?= $_accordion ?>-agenda-tab">
       Agenda
     </a>
 
-    <a class="nav-link small" data-toggle="tab" href="#<?= $_accordion ?>-week-tab" id="<?= $_accordion ?>-week" aria-selected="false" aria-controls="<?= $_accordion ?>-week-tab">
+    <a class="nav-link d-none d-lg-block small" data-toggle="tab" data-format="week" href="#<?= $_accordion ?>-week-tab" id="<?= $_accordion ?>-week" aria-selected="false" aria-controls="<?= $_accordion ?>-week-tab">
       Week
     </a>
 
-    <a class="nav-link small" data-toggle="tab" href="#<?= $_accordion ?>-month-tab" id="<?= $_accordion ?>-month" aria-selected="false" aria-controls="<?= $_accordion ?>-month-tab">
+    <a class="nav-link d-none d-lg-block small" data-toggle="tab" data-format="month" href="#<?= $_accordion ?>-month-tab" id="<?= $_accordion ?>-month" aria-selected="false" aria-controls="<?= $_accordion ?>-month-tab">
       Month
     </a>
 
@@ -48,8 +50,8 @@ $_accordion = strings::rand();  ?>
 
 <div class="tab-content">
   <div id="<?= $_accordion ?>-agenda-tab" class="tab-pane fade" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-agenda"></div>
-  <div id="<?= $_accordion ?>-week-tab" class="tab-pane fade" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-week"></div>
-  <div id="<?= $_accordion ?>-month-tab" class="tab-pane fade" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-month"></div>
+  <div id="<?= $_accordion ?>-week-tab" class="tab-pane fade small" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-week"></div>
+  <div id="<?= $_accordion ?>-month-tab" class="tab-pane fade small" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-month"></div>
 
 </div>
 <script>
@@ -57,8 +59,22 @@ $_accordion = strings::rand();  ?>
   let getFeed = (feed, tab) => {
     return new Promise( resolve => {
       if ( /post/i.test( String( feed.method))) {
+        let _data = tab.data();
+
         let date = _.dayjs($('#<?= $_accordion ?>-date').val());
         let edate = date.add('7', 'days');
+        if ( 'week' == _data.format) {
+          date = date.day(0);
+          edate = date.add('7', 'days');
+
+        }
+        else if ( 'month' == _data.format) {
+          date = date.date(1);
+          edate = date.add('1', 'month').day(0);
+
+        }
+
+        // console.log( tab[0]);
 
         _.post({
           url : feed.url,
@@ -73,7 +89,7 @@ $_accordion = strings::rand();  ?>
         }).then( d => {
           if ( 'ack' == d.response) {
             $.each( d.data, ( i, event) => {
-              tab.trigger( 'event-add', event)
+              tab.trigger( 'event-add', { event : event, feed : feed })
               // console.log( event);
 
             });
@@ -91,10 +107,10 @@ $_accordion = strings::rand();  ?>
   };
 
   $('#<?= $_accordion ?>-agenda')
-  .on( 'event-add', function(e, event) {
+  .on( 'event-add', function(e, p) {
     let tab = $('#<?= $_accordion ?>-agenda-tab');
-    let date = _.dayjs( event.start);
-    let edate = _.dayjs( event.end);
+    let date = _.dayjs( p.event.start);
+    let edate = _.dayjs( p.event.end);
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
     let container = $(key, tab);
 
@@ -104,10 +120,12 @@ $_accordion = strings::rand();  ?>
     .appendTo( row);
 
     $('<div class="col-7 col-md-8 col-xl-7"></div>')
-    .html( event.summary)
+    .html( p.event.summary)
     .appendTo( row);
 
-    row.appendTo( container);
+    row
+    .css( 'background-color', p.feed.color)
+    .appendTo( container);
 
   })
   .on( 'update-tab', function(e) {
@@ -129,7 +147,7 @@ $_accordion = strings::rand();  ?>
 
       };
 
-      console.table( 'update-tab-agenda');
+      // console.table( 'update-tab-agenda');
       getNextFeed();
 
     });
@@ -146,21 +164,19 @@ $_accordion = strings::rand();  ?>
   });
 
   $('#<?= $_accordion ?>-week')
-  .on( 'event-add', function(e, event) {
+  .on( 'event-add', function(e, p) {
     // console.log( 'event-add-week');
     let tab = $('#<?= $_accordion ?>-week-tab');
-    let date = _.dayjs( event.start);
-    let edate = _.dayjs( event.end);
-    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
+    let date = _.dayjs( p.event.start);
+    // console.log( date.format('YYYY-MM-DD h:mm a'))
+    let edate = _.dayjs( p.event.end);
+    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('h') + '"]';
     let container = $(key, tab);
 
-    let row = $('<div class="form-row mb-2"></div>');
-    $('<div class="col-5 text-truncate"></div>')
-    .html( date.format( 'h:mm a'))
-    .appendTo( row);
-
-    $('<div class="col-7"></div>')
-    .html( event.summary)
+    let row = $('<div class="form-row align-items-start mb-2"></div>');
+    $('<div class="col-11 text-truncate"></div>')
+    .html( p.event.summary)
+    .css( 'background-color', p.feed.color)
     .appendTo( row);
 
     row.appendTo( container);
@@ -185,7 +201,7 @@ $_accordion = strings::rand();  ?>
 
       };
 
-      console.table( 'update-tab-week');
+      // console.table( 'update-tab-week');
       getNextFeed();
 
     });
@@ -202,10 +218,58 @@ $_accordion = strings::rand();  ?>
   });
 
   $('#<?= $_accordion ?>-month')
+  .on( 'event-add', function(e, p) {
+    let tab = $('#<?= $_accordion ?>-month-tab');
+    let date = _.dayjs( p.event.start);
+    let edate = _.dayjs( p.event.end);
+    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
+    let container = $(key, tab);
+
+    let row = $('<div class="form-row mb-2"></div>');
+    row.data('data', p);
+    row.on( 'click', function( e) {
+      e.stopPropagation();e.preventDefault();
+      let _me = $(this);
+      let _data = _me.data();
+      $(document).trigger( 'edit-calendar-event', _data);
+
+    })
+
+    $('<div class="col-4 col-xl-3 text-truncate"></div>')
+    .html( date.format( 'h:mma').replace( /m$/, ''))
+    .appendTo( row);
+
+    $('<div class="col text-truncate"></div>')
+    .html( p.event.summary)
+    .css( 'background-color', p.feed.color)
+    .appendTo( row);
+
+    row.appendTo( container);
+
+  })
   .on( 'update-tab', function(e) {
-    // console.log( 'update-tab-month');
-    let feeds = $(document).data('active_feeds');
-    console.table( feeds);
+    let _me = $(this);
+    let tab = $('#<?= $_accordion ?>-month-tab');
+    let date = _.dayjs($('#<?= $_accordion ?>-date').val());
+    let url = '<?= $this->route ?>/month?seed=' + date.format( 'YYYY-MM-DD');
+
+    tab.load( url, html => {
+      let feeds = $(document).data('active_feeds');
+      let i = 0;
+
+      let getNextFeed = () => {
+        if ( feeds.length > i) {
+          getFeed( feeds[i++], _me)
+          .then( getNextFeed);
+
+        }
+
+      };
+
+      // console.table( 'update-tab-week');
+      getNextFeed();
+
+    });
 
   })
   .on( 'show.bs.tab', function(e) {

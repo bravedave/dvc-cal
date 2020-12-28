@@ -16,10 +16,9 @@ use strings;  ?>
 <div class="nav flex-column" id="<?= $_feedlist = strings::rand() ?>">
   <div class="nav-item h5">Feeds</div>
   <?php
-  $feeds = config::dvc_cal_feeds();
-  foreach ($feeds as $feed) { ?>
+  foreach ($this->feeds as $feed) { ?>
     <div class="nav-item">
-      <div class="nav-link">
+      <div class="nav-link" style="background-color: <?= $feed->color ?>">
         <div class="form-check">
           <input type="checkbox" class="form-check-input"
             data-name="<?= $feed->name ?>"
