@@ -13,8 +13,8 @@
         { "type": "git", "url": "https://github.com/bravedave/dvc" }
     ],
     "require": {
-        "johngrogg/ics-parser": "dev-master",
-        "bravedave/dvc": "dev-master"
+        "johngrogg/ics-parser": "*",
+        "bravedave/dvc": "*"
     },
     "autoload": {
         "psr-4": {
