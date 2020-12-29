@@ -76,15 +76,17 @@ $_accordion = strings::rand();  ?>
 
         // console.log( tab[0]);
 
+        let data = !!feed.data ? JSON.parse( feed.data) : {};
+        data.action = 'get-feed';
+        data.name = feed.name;
+        data.start = date.format( 'YYYY-MM-DD');
+        data.end = edate.format( 'YYYY-MM-DD');
+
+        console.table( data);
+
         _.post({
           url : feed.url,
-          data : {
-            action : 'get-feed',
-            name : feed.name,
-            start : date.format( 'YYYY-MM-DD'),
-            end : edate.format( 'YYYY-MM-DD'),
-
-          },
+          data : data,
 
         }).then( d => {
           if ( 'ack' == d.response) {
