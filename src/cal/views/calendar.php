@@ -114,8 +114,8 @@ $_accordion = strings::rand();  ?>
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
     let container = $(key, tab);
 
-    let row = $('<div class="form-row mb-2"></div>');
-    $('<div class="col-5 col-md-4 col-xl-3 text-truncate"></div>')
+    let row = $('<div class="form-row border"></div>');
+    $('<div class="col-5 col-md-4 col-xl-3 py-1 text-truncate"></div>')
     .html( date.format( 'h:mm a') + ' - ' + edate.format( 'h:mm a'))
     .appendTo( row);
 
@@ -173,8 +173,8 @@ $_accordion = strings::rand();  ?>
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('h') + '"]';
     let container = $(key, tab);
 
-    let row = $('<div class="form-row align-items-start mb-2"></div>');
-    $('<div class="col-11 text-truncate"></div>')
+    let row = $('<div class="form-row border"></div>');
+    $('<div class="col py-1 text-truncate"></div>')
     .html( p.event.summary)
     .css( 'background-color', p.feed.color)
     .appendTo( row);
@@ -189,9 +189,28 @@ $_accordion = strings::rand();  ?>
     let url = '<?= $this->route ?>/week?seed=' + date.format( 'YYYY-MM-DD');
 
     tab.load( url, html => {
+      $('<button type="button" class="btn btn-light btn-sm flex-fill"><i class="bi bi-chevron-double-left pointer"></i></button>')
+      .on( 'click', function( e) {
+        e.stopPropagation();e.preventDefault();
+
+        $('#<?= $_accordion ?>-date').val( date.add( '-7', 'days').format('YYYY-MM-DD'));
+        _me.trigger( 'update-tab');
+
+      })
+      .appendTo( $('[ctrl-box]', tab))
+
+      $('<button type="button" class="btn btn-light btn-sm flex-fill"><i class="bi bi-chevron-double-right pointer"></i></button>')
+      .on( 'click', function( e) {
+        e.stopPropagation();e.preventDefault();
+
+        $('#<?= $_accordion ?>-date').val( date.add( '7', 'days').format('YYYY-MM-DD'));
+        _me.trigger( 'update-tab');
+
+      })
+      .appendTo( $('[ctrl-box]', tab))
+
       let feeds = $(document).data('active_feeds');
       let i = 0;
-
       let getNextFeed = () => {
         if ( feeds.length > i) {
           getFeed( feeds[i++], _me)
@@ -225,7 +244,7 @@ $_accordion = strings::rand();  ?>
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
     let container = $(key, tab);
 
-    let row = $('<div class="form-row mb-2"></div>');
+    let row = $('<div class="form-row border"></div>');
     row.data('data', p);
     row.on( 'click', function( e) {
       e.stopPropagation();e.preventDefault();
@@ -235,11 +254,11 @@ $_accordion = strings::rand();  ?>
 
     })
 
-    $('<div class="col-4 col-xl-3 text-truncate"></div>')
+    $('<div class="col-4 col-xl-3 py-1 text-truncate"></div>')
     .html( date.format( 'h:mma').replace( /m$/, ''))
     .appendTo( row);
 
-    $('<div class="col text-truncate"></div>')
+    $('<div class="col py-1 text-truncate"></div>')
     .html( p.event.summary)
     .css( 'background-color', p.feed.color)
     .appendTo( row);
@@ -254,9 +273,44 @@ $_accordion = strings::rand();  ?>
     let url = '<?= $this->route ?>/month?seed=' + date.format( 'YYYY-MM-DD');
 
     tab.load( url, html => {
+
+      $('<button type="button" class="btn btn-light btn-sm"><i class="bi bi-chevron-double-left pointer"></i></button>')
+      .on( 'click', function( e) {
+        e.stopPropagation();e.preventDefault();
+
+        $('#<?= $_accordion ?>-date').val( date.add( '-1', 'month').format('YYYY-MM-DD'));
+        _me.trigger( 'update-tab');
+
+      })
+      .prependTo( $('[heading]', tab))
+
+      $('<button type="button" class="btn btn-light btn-sm"><i class="bi bi-chevron-double-right pointer"></i></button>')
+      .on( 'click', function( e) {
+        e.stopPropagation();e.preventDefault();
+
+        $('#<?= $_accordion ?>-date').val( date.add( '1', 'month').format('YYYY-MM-DD'));
+        _me.trigger( 'update-tab');
+
+      })
+      .appendTo( $('[heading]', tab))
+
+      $('div[data-date]', tab).each( (i, el) => {
+        let _me = $(el);
+        let _data = _me.data();
+        $('<i class="bi bi-calendar-date pointer ml-auto"></i>')
+        .on( 'click', function( e) {
+          e.stopPropagation();e.preventDefault();
+
+          $('#<?= $_accordion ?>-date').val( _data.date);
+          $('#<?= $_accordion ?>-agenda').tab( 'show');
+
+        })
+        .appendTo( $('[headline]', _me));
+
+      });
+
       let feeds = $(document).data('active_feeds');
       let i = 0;
-
       let getNextFeed = () => {
         if ( feeds.length > i) {
           getFeed( feeds[i++], _me)

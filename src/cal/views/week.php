@@ -19,7 +19,7 @@ $slots = [6,7,8,9,10,11,12,13,14,15,16,17,18];  ?>
 
 <div class="form-row mb-1">
   <div class="col-1">
-    <div class="row"><div class="col text-center">&nbsp;</div></div>
+    <div class="row"><div class="col d-flex" ctrl-box></div></div>
 
   </div>
 

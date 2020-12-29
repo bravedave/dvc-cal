@@ -19,7 +19,7 @@ $month = $seed->format('n');
 ?>
 
 <div class="form-row">
-  <div class="col text-center h6 my-2"><?= $seed->format('F') ?></div>
+  <div class="col my-2 d-flex" heading><h6 class="my-0 mx-auto p-1 text-center"><?= $seed->format('F') ?></h6></div>
 
 </div>
 <div class="form-row border-bottom">
@@ -44,7 +44,7 @@ while ( $day < $seed->format('w')) {
 while ( $month == $seed->format('n')) {
 
   printf(
-    '<div class="col py-2" style="min-height: 6rem; width: %s%%;" data-date="%s"><div class="form-row"><div class="col bg-light">%s<sup>%s</sup></div></div></div>',
+    '<div class="col py-2" style="min-height: 6rem; width: %s%%;" data-date="%s"><div class="form-row"><div class="col bg-light d-flex" headline><div>%s<sup>%s</sup></div></div></div></div>',
     $hardWidth,
     $seed->format( 'Y-m-d'),
     $seed->format( 'j'),
