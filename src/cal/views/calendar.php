@@ -82,7 +82,7 @@ $_accordion = strings::rand();  ?>
         data.start = date.format( 'YYYY-MM-DD');
         data.end = edate.format( 'YYYY-MM-DD');
 
-        console.table( data);
+        // console.table( data);
 
         _.post({
           url : feed.url,
