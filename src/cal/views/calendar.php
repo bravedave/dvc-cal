@@ -117,6 +117,17 @@ $_accordion = strings::rand();  ?>
     let container = $(key, tab);
 
     let row = $('<div class="form-row border"></div>');
+    row
+    .css( 'background-color', p.feed.color)
+    .data('data', p)
+    .on( 'click', function( e) {
+      e.stopPropagation();e.preventDefault();
+      let _me = $(this);
+      let _data = _me.data();
+      $(document).trigger( 'edit-calendar-event', _data);
+
+    });
+
     $('<div class="col-5 col-md-4 col-xl-3 py-1 text-truncate"></div>')
     .html( date.format( 'h:mm a') + ' - ' + edate.format( 'h:mm a'))
     .appendTo( row);
@@ -125,9 +136,7 @@ $_accordion = strings::rand();  ?>
     .html( p.event.summary)
     .appendTo( row);
 
-    row
-    .css( 'background-color', p.feed.color)
-    .appendTo( container);
+    row.appendTo( container);
 
   })
   .on( 'update-tab', function(e) {
@@ -176,9 +185,19 @@ $_accordion = strings::rand();  ?>
     let container = $(key, tab);
 
     let row = $('<div class="form-row border"></div>');
+    row
+    .css( 'background-color', p.feed.color)
+    .data('data', p)
+    .on( 'click', function( e) {
+      e.stopPropagation();e.preventDefault();
+      let _me = $(this);
+      let _data = _me.data();
+      $(document).trigger( 'edit-calendar-event', _data);
+
+    });
+
     $('<div class="col py-1 text-truncate"></div>')
     .html( p.event.summary)
-    .css( 'background-color', p.feed.color)
     .appendTo( row);
 
     row.appendTo( container);
@@ -247,8 +266,10 @@ $_accordion = strings::rand();  ?>
     let container = $(key, tab);
 
     let row = $('<div class="form-row border"></div>');
-    row.data('data', p);
-    row.on( 'click', function( e) {
+    row
+    .css( 'background-color', p.feed.color)
+    .data('data', p)
+    .on( 'click', function( e) {
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
@@ -262,7 +283,6 @@ $_accordion = strings::rand();  ?>
 
     $('<div class="col py-1 text-truncate"></div>')
     .html( p.event.summary)
-    .css( 'background-color', p.feed.color)
     .appendTo( row);
 
     row.appendTo( container);
@@ -380,6 +400,7 @@ $_accordion = strings::rand();  ?>
 
   });
 
+  $(document).on( 'calendar-refresh', e => $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab'));
   $(document).ready( () => $(document).trigger('load-active-feeds'));
 
 }) (_brayworth_);
