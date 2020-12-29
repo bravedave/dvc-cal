@@ -61,7 +61,7 @@ while ( $month == $seed->format('n')) {
   $seed->add( new DateInterval('P1D'));
 
 };
-while ( $day++ < 6) {
+while ( $day++ < 7) {
   print '<div class="col">&nbsp;</div>';
 
 }
