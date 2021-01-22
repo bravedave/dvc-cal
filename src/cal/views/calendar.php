@@ -229,10 +229,13 @@ $_accordion = strings::rand();  ?>
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('h') + '"]';
     let container = $(key, tab);
 
-    let row = $('<div class="form-row border"></div>');
+    let row = $('<div class="form-row border" item></div>');
     row
     .css( 'background-color', p.feed.color)
     .data('data', p)
+    .data('time', date.format('YYYY-MM-DD hh:mm'))
+    .data('unix', date.unix())
+    .data('allday', allDay ? 'yes' : 'no')
     .on( 'click', function( e) {
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
@@ -245,7 +248,31 @@ $_accordion = strings::rand();  ?>
     .html( p.event.summary)
     .appendTo( row);
 
-    row.appendTo( container);
+    // insert at correct location
+    let before = false;
+    $( '> [item]', container).each((i,row) => {
+      let _row = $(row);
+      let _data = _row.data();
+
+      if ( 'yes' != _data.allDay) {
+        if ( date.unix() < _data.unix) {
+          before = row;
+          return false; // jQuery break
+
+        }
+
+      }
+
+    });
+
+    if ( !!before) {
+      row.insertBefore( before);
+
+    }
+    else {
+      row.appendTo( container);
+
+    }
 
   })
   .on( 'update-tab', function(e) {
