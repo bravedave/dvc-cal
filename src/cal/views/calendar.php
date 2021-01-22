@@ -309,11 +309,15 @@ $_accordion = strings::rand();  ?>
     let edate = _.dayjs( p.event.end);
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
     let container = $(key, tab);
+    let allDay = (date.unix() + 86400) == edate.unix();
 
-    let row = $('<div class="form-row border"></div>');
+    let row = $('<div class="form-row border" item></div>');
     row
     .css( 'background-color', p.feed.color)
     .data('data', p)
+    .data('time', date.format('YYYY-MM-DD hh:mm'))
+    .data('unix', date.unix())
+    .data('allday', allDay ? 'yes' : 'no')
     .on( 'click', function( e) {
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
@@ -330,7 +334,46 @@ $_accordion = strings::rand();  ?>
     .html( p.event.summary)
     .appendTo( row);
 
-    row.appendTo( container);
+    if ( allDay) {
+      let items = $( '> [item]', container);
+      if ( items.length > 0) {
+        row.insertBefore( items[0]);
+
+      }
+      else {
+        row.appendTo( container);
+
+      }
+
+    }
+    else {
+      // insert at correct location
+      let before = false;
+      $( '> [item]', container).each((i,row) => {
+        let _row = $(row);
+        let _data = _row.data();
+
+        if ( 'yes' != _data.allDay) {
+          if ( date.unix() < _data.unix) {
+            before = row;
+            return false; // jQuery break
+
+          }
+
+        }
+
+      });
+
+      if ( !!before) {
+        row.insertBefore( before);
+
+      }
+      else {
+        row.appendTo( container);
+
+      }
+
+    }
 
   })
   .on( 'update-tab', function(e) {
