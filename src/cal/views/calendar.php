@@ -228,6 +228,7 @@ $_accordion = strings::rand();  ?>
     let edate = _.dayjs( p.event.end);
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('h') + '"]';
     let container = $(key, tab);
+    let allDay = (date.unix() + 86400) == edate.unix();
 
     let row = $('<div class="form-row border" item></div>');
     row
