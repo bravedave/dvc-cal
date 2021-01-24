@@ -16,23 +16,24 @@ use strings;  ?>
 <div class="nav flex-column" id="<?= $_feedlist = strings::rand() ?>">
   <div class="nav-item h5">Feeds</div>
   <?php
-  foreach ($this->feeds as $feed) { ?>
+  foreach ($this->feeds as $feed) {
+    $active = 'yes' == currentUser::option( 'cal-feed-' . $feed->name);
+    ?>
     <div class="nav-item">
-      <div class="nav-link" style="background-color: <?= $feed->color ?>">
-        <div class="form-check">
-          <input type="checkbox" class="form-check-input"
-            data-name="<?= $feed->name ?>"
-            <?php if ( 'yes' == currentUser::option( 'cal-feed-' . $feed->name)) print 'checked' ?>
-            id="<?= $uid = strings::rand() ?>">
+      <a class="nav-link" data-name="<?= $feed->name ?>" data-active="<?= $active ? 'yes' : 'no' ?>" href="#">
+        <?php
+          printf(
+            '<i class="bi %s" style="color: %s"></i>',
+            $active ? 'bi-check-square-fill' : 'bi-square',
+            $feed->color
 
-          <label class="form-check-label" for="<?= $uid ?>">
-            <?= $feed->name ?>
+          );
 
-          </label>
+        ?>
 
-        </div>
+        <?= $feed->name ?>
 
-      </div>
+      </a>
 
     </div>
 
@@ -42,22 +43,33 @@ use strings;  ?>
 </div>
 <script>
 ( _ => {
-  $('input[type="checkbox"]', '#<?= $_feedlist ?>').each( (i, feed) => {
-    $(feed).on( 'change', function(e) {
+  $('a.nav-link[data-name]', '#<?= $_feedlist ?>').each( (i, feed) => {
+    $(feed)
+    .on( 'click', function( e) {
+      e.stopPropagation();e.preventDefault();
+
       let _me = $(this);
       let _data = _me.data();
+      let newState = 'yes' == _data.active ? 'no' : 'yes';
 
       _.post({
         url : _.url('<?= $this->route ?>'),
         data : {
           action : 'toggle-feed',
           feed : _data.name,
-          state : _me.prop( 'checked') ? 'yes' : 'no'
+          state : newState
 
         },
 
       }).then( d => {
         _.growl( d);
+
+        _me.data('active', newState);
+
+        $('.bi', _me)
+        .removeClass()
+        .addClass( 'yes' == newState ? 'bi bi-check-square-fill' : 'bi bi-square');
+
         $(document).trigger('load-active-feeds');
 
       });
