@@ -20,7 +20,7 @@ $_accordion = strings::rand();  ?>
   <div class="nav nav-tabs" role="tablist" id="<?= $_accordion ?>-tablist">
     <div class="nav-item">
       <div class="input-group">
-        <input type="date" class="form-control" id="<?= $_accordion ?>-date"
+        <input type="date" class="form-control" autofocus id="<?= $_accordion ?>-date"
           value="<?= date( 'Y-m-d') ?>">
 
         <div class="input-group-append">
@@ -56,6 +56,14 @@ $_accordion = strings::rand();  ?>
 </div>
 <script>
 ( _ => {
+  $('#<?= $_accordion ?>-date').on( 'keypress', e => {
+    if ( 13 == e.keyCode) {
+      $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
+
+    }
+
+  })
+
   let getFeed = (feed, tab) => {
     return new Promise( resolve => {
       if ( /post/i.test( String( feed.method))) {

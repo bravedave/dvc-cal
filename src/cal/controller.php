@@ -31,7 +31,11 @@ class controller extends \Controller {
 
     $this->render([
       'primary' => 'calendar',
-      'secondary' => 'feeds'
+      'secondary' => 'feeds',
+      'data' => (object)[
+        'searchFocus' => false,
+
+      ],
 
     ]);
 
