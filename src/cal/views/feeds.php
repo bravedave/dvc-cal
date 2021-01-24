@@ -23,8 +23,8 @@ use strings;  ?>
       <a class="nav-link" data-name="<?= $feed->name ?>" data-active="<?= $active ? 'yes' : 'no' ?>" href="#">
         <?php
           printf(
-            '<i class="bi %s" style="color: %s"></i>',
-            $active ? 'bi-check-square-fill' : 'bi-square',
+            '<i class="bi d-inline-flex %s" style="color: %s"></i>',
+            $active ? 'bi-check-square-fill bg-dark' : 'bi-square',
             $feed->color
 
           );
@@ -68,7 +68,8 @@ use strings;  ?>
 
         $('.bi', _me)
         .removeClass()
-        .addClass( 'yes' == newState ? 'bi bi-check-square-fill' : 'bi bi-square');
+        .addClass( 'bi d-inline-flex')
+        .addClass( 'yes' == newState ? 'bi-check-square-fill bg-dark' : 'bi-square');
 
         $(document).trigger('load-active-feeds');
 
