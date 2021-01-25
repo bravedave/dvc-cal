@@ -15,6 +15,9 @@ use strings;
 $_accordion = strings::rand();  ?>
 <style>
 @media print{@page {size: landscape}}
+@media (max-width: 575.98px) {
+  #<?= $_accordion ?>-date { -webkit-appearance: none; }
+}
 </style>
 <nav class="d-print-none">
   <div class="nav nav-tabs" role="tablist" id="<?= $_accordion ?>-tablist">
