@@ -60,7 +60,46 @@ class controller extends \Controller {
     }
 		elseif ( 'get-feed' == $action) {
       $name = $this->getPost('name');
-      if ( 'Sample Feed' == $name) {
+      if ( 'Australian Public Holidays' == $name) {
+        $path = implode( DIRECTORY_SEPARATOR, [
+          __DIR__,
+          'data',
+          'australian_public_holidays.csv'
+
+        ]);
+
+        $start = $this->getPost('start');
+        $end = $this->getPost('end');
+
+        $reader = reader::readCSV( $path);
+        $feed = $reader->feed( $start, $end);
+
+        Json::ack( $action)
+          ->add( 'data', $feed);
+
+      }
+      elseif ( 'Queensland Public Holidays' == $name) {
+        $path = implode( DIRECTORY_SEPARATOR, [
+          __DIR__,
+          'data',
+          'australian_public_holidays.csv'
+
+        ]);
+
+        $start = $this->getPost('start');
+        $end = $this->getPost('end');
+
+        $reader = reader::readCSV( $path);
+        $feed = $reader->feed( $start, $end, function( $evt) {
+          return 'qld' == $evt['location'];
+
+        });
+
+        Json::ack( $action)
+          ->add( 'data', $feed);
+
+      }
+      elseif ( 'Sample Feed' == $name) {
         $path = implode( DIRECTORY_SEPARATOR, [
           config::dataPath(),
           'feed.ics'
@@ -153,5 +192,27 @@ class controller extends \Controller {
     $this->load( 'week');
 
   }
+
+  // public function x() {
+  //   $path = implode( DIRECTORY_SEPARATOR, [
+  //     __DIR__,
+  //     'data',
+  //     'australian_public_holidays.csv'
+
+  //   ]);
+
+  //   $start = '2021-01-01';
+  //   $end = '2021-12-31';
+
+  //   $reader = reader::readCSV( $path);
+  //   // $feed = $reader->feed( $start, $end);
+  //   $feed = $reader->feed( $start, $end, function( $evt) {
+  //     return 'qld' == $evt['location'];
+
+  //   });
+
+  //   \sys::dump( $feed);
+
+  // }
 
 }

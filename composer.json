@@ -14,7 +14,8 @@
     ],
     "require": {
         "johngrogg/ics-parser": "*",
-        "bravedave/dvc": "*"
+        "bravedave/dvc": "*",
+        "parsecsv/php-parsecsv": "^1.2"
     },
     "autoload": {
         "psr-4": {
