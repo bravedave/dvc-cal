@@ -18,6 +18,7 @@ use strings;  ?>
   <?php
   foreach ($this->feeds as $feed) {
     $active = 'yes' == currentUser::option( 'cal-feed-' . $feed->name);
+
     ?>
     <div class="nav-item">
       <a class="nav-link" data-name="<?= $feed->name ?>" data-active="<?= $active ? 'yes' : 'no' ?>" href="#">
@@ -29,9 +30,14 @@ use strings;  ?>
 
           );
 
-        ?>
+        if ( isset( $feed->personal) && $feed->personal) {
+          printf( ' <strong>%s</strong>', $feed->name);
 
-        <?= $feed->name ?>
+        }
+        else {
+          printf( ' <span>%s</span>', $feed->name);
+
+        } ?>
 
       </a>
 
