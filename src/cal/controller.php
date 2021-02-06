@@ -99,24 +99,7 @@ class controller extends \Controller {
           ->add( 'data', $feed);
 
       }
-      elseif ( 'Sample Feed' == $name) {
-        $path = implode( DIRECTORY_SEPARATOR, [
-          config::dataPath(),
-          'feed.ics'
-
-        ]);
-
-        $start = $this->getPost('start');
-        $end = $this->getPost('end');
-
-        // $reader = reader::readICS( $path);
-        $reader = reader::ICSString( file_get_contents( $path));
-        $feed = $reader->feed( $start, $end);
-
-        Json::ack( $action)
-          ->add( 'data', $feed);
-
-      } else { Json::nak( sprintf( '%s - %s', $name, $action)); }
+      else { Json::nak( sprintf( '%s - %s', $name, $action)); }
 
     }
 		elseif ( 'toggle-feed' == $action) {

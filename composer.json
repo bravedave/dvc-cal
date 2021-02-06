@@ -2,6 +2,7 @@
     "name": "bravedave/dvc-cal",
     "description": "DVC Calendar Module",
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "license": "MIT",
     "authors": [
         {
@@ -15,7 +16,8 @@
     "require": {
         "johngrogg/ics-parser": "*",
         "bravedave/dvc": "*",
-        "parsecsv/php-parsecsv": "^1.2"
+        "parsecsv/php-parsecsv": "^1.2",
+        "sabre/dav": "^4.1"
     },
     "autoload": {
         "psr-4": {
