@@ -60,7 +60,66 @@ class controller extends \Controller {
     }
 		elseif ( 'get-feed' == $action) {
       $name = $this->getPost('name');
-      if ( 'Australian Public Holidays' == $name) {
+      $type = $this->getPost('type');
+      // \sys::logger( sprintf('<feed %s> %s', $type, __METHOD__));
+
+      if ( 'dav' == $type) {
+        if ($account = $this->getPost('account')) {
+          $settings = false;
+
+          $config = implode( DIRECTORY_SEPARATOR, [
+            config::dataPath(),
+            sprintf( '%s.json', $account)
+
+          ]);
+
+          if ( file_exists( $config)) {
+            $settings = (array)json_decode( file_get_contents( $config));
+
+          }
+          elseif ( (int)$account) {
+            $dao = new \dao\users;
+            $settings = $dao->getCalDavCredentialsUserByID( (int)$account);
+
+          }
+
+          if ( $settings) {
+            $client = new dav\client( $settings);
+
+            $calendars = [];
+            $events = [];
+            // printf( '<br>principal : %s', $client->principal);
+
+            if ( $calendar = $client->getCalendar( 'Personal')) {
+              $start = $this->getPost('start');
+              $end = $this->getPost('end');
+
+              $_events = $client->getEvents( $calendar, $start, $end);
+              // \sys::logger( sprintf('<events %s - %s> <%s> %s', $start, $end, count( $_events), __METHOD__));
+              // \sys::dump( $_events, 'Personal Calendar');
+
+              $events = [];
+              foreach ($_events as $_event) {
+                $reader = reader::readICS( $_event->data);
+                $feed = $reader->feed();
+                foreach ($feed as $e) $events[] = $e;
+
+              }
+
+            }
+
+            Json::ack( $action)
+              ->add( 'data', $events);
+            // \sys::logger( sprintf('<feed %s> %s', count( $events), __METHOD__));
+
+          }
+
+        }
+        else { Json::nak( sprintf( 'invalid account - %s', $action)); }
+
+
+      }
+      elseif ( 'Australian Public Holidays' == $name) {
         $path = implode( DIRECTORY_SEPARATOR, [
           __DIR__,
           'data',

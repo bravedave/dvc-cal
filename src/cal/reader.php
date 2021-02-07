@@ -118,12 +118,17 @@ class reader {
       $description = str_replace( '\n', PHP_EOL, $event->description);
       $description = str_replace( '\,', ',', $description);
 
+      $start = new DateTime(($event->dtstart));
+      $start->setTimezone( new \DateTimeZone( config::$TIMEZONE));
+      $end = new DateTime(($event->dtend));
+      $end->setTimezone( new \DateTimeZone( config::$TIMEZONE));
+
       $reader->append([
         'summary' => $event->summary,
-        'start' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtstart)),
-        'end' => date('Y-m-d H:i', $ical->iCalDateToUnixTimestamp($event->dtend)),
-        'startUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtstart)),
-        'endUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtend)),
+        'start' => $start->format('Y-m-d H:i'),
+        'end' => $end->format('Y-m-d H:i'),
+        'startUTC' => $start->format('c'),
+        'endUTC' => $end->format('c'),
         'location' => $event->location,
         'description' => $description,
         'data' => $event->printData()
@@ -188,28 +193,37 @@ class reader {
 
   }
 
-  public function feed( $start, $end, $filter = false) : array {
-    $a = [];
-    foreach ( $this->_feed as $event) {
-      $es = date( 'Y-m-d', strtotime( $event['start']));
-      if ( $es >= $start && $es <= $end) {
-        if ( $filter) {
-          if ( $filter( $event)) {
-            $a[] = $event;
+  public function feed( string $start = '', string $end = '', $filter = false) : array {
+
+    if ( $start || $end || $filter) {
+      $a = [];
+      foreach ( $this->_feed as $event) {
+        $es = date( 'Y-m-d', strtotime( $event['start']));
+        if ( !$start || $es >= $start) {
+          if ( !$end || $es <= $end) {
+            if ( $filter) {
+              if ( $filter( $event)) {
+                $a[] = $event;
+
+              }
+
+            }
+            else {
+              $a[] = $event;
+
+            }
 
           }
-
-        }
-        else {
-          $a[] = $event;
 
         }
 
       }
 
+      return $a;
+
     }
 
-    return $a;
+    return $this->_feed;
 
   }
 

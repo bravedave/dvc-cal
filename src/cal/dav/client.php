@@ -12,6 +12,7 @@
 
 namespace dvc\cal\dav;
 
+use dvc\cal\config;
 use Sabre;
 
 class client {
@@ -24,43 +25,110 @@ class client {
   public $principal;
 
   function __construct( array $settings) {
+    $debug = false;
+    // $debug = true;
+
     $this->_client = new Sabre\DAV\Client($settings);
+    if ( $debug) {
+      \sys::logger(
+        sprintf(
+          '<%s> %s',
+          \application::timer()->elapsed(),
+          __METHOD__
+
+        )
+
+      );
+
+    }
 
     /**
      * Get a path for the user’s principal resource on the server.
      */
-    if ( $props = $this->_client->propfind('', [ '{DAV:}current-user-principal' ], $depth = 0)) {
-      $this->principal = $props['{DAV:}current-user-principal'][0]['value'];
+    if ( isset( $settings['principal'])) {
+      $this->principal = $settings['principal'];
 
-      /**
-       * Get a path that contains calendar collections
-       * owned by the user using the user’s principal
-       * resource address obtained in the previous step.
-       **/
+    }
+    else {
+      \sys::logger(
+        sprintf(
+          '<getting principal> <%s> %s',
+          \application::timer()->elapsed(),
+          __METHOD__
 
-      $body = implode( '', [
-        '<?xml version="1.0"?>',
-        '<d:propfind xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">',
-        '<d:prop><c:calendar-home-set /></d:prop>',
-        '</d:propfind>'
+        )
 
-      ]);
+      );
 
-      $key = '{urn:ietf:params:xml:ns:caldav}calendar-home-set';
+      if ( $props = $this->_client->propfind('', [ '{DAV:}current-user-principal' ], $depth = 0)) {
+        $this->principal = $props['{DAV:}current-user-principal'][0]['value'];
 
-      if ( $response = $this->_client->request('PROPFIND', $this->principal, $body, [ 'Depth' => 0])) {
-        // \sys::dump( $response);
-        if ( 207 == $response['statusCode']) {
-          if ( $multi = $this->_client->parseMultiStatus($response['body'])) {
-            $first = \array_shift($multi);
-            if ( isset( $first[200])) {
+        \sys::logger(
+          sprintf(
+            '<speed up by providing principal : %s> <%s> %s',
+            $this->principal,
+            \application::timer()->elapsed(),
+            __METHOD__
 
-              if (isset( $first[200][$key])) {
-                $this->_calendarRoot = $first[200][$key][0]['value'];
+          )
 
-              }
-              elseif ( isset( $first[200]['{DAV:}href'])) {
-                $this->_calendarRoot = $first[200]['{DAV:}href'];
+        );
+
+      }
+
+    }
+
+    if ( $this->principal) {
+
+      if ( $debug) \sys::logger( sprintf('<principal : %s> %s', $this->principal, __METHOD__));
+
+      if ( isset( $settings['calendarRoot'])) {
+        $this->_calendarRoot = $settings['calendarRoot'];
+
+      }
+      else {
+        /**
+         * Get a path that contains calendar collections
+         * owned by the user using the user’s principal
+         * resource address obtained in the previous step.
+         **/
+
+        $body = implode( '', [
+          '<?xml version="1.0"?>',
+          '<d:propfind xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">',
+          '<d:prop><c:calendar-home-set /></d:prop>',
+          '</d:propfind>'
+
+        ]);
+
+        $key = '{urn:ietf:params:xml:ns:caldav}calendar-home-set';
+
+        if ( $response = $this->_client->request('PROPFIND', $this->principal, $body, [ 'Depth' => 0])) {
+          // \sys::dump( $response);
+          if ( 207 == $response['statusCode']) {
+            if ( $multi = $this->_client->parseMultiStatus($response['body'])) {
+              $first = \array_shift($multi);
+              if ( isset( $first[200])) {
+
+                if (isset( $first[200][$key])) {
+                  $this->_calendarRoot = $first[200][$key][0]['value'];
+
+                }
+                elseif ( isset( $first[200]['{DAV:}href'])) {
+                  $this->_calendarRoot = $first[200]['{DAV:}href'];
+
+                }
+
+                \sys::logger(
+                  sprintf(
+                    '<speed up by providing calendarRoot : %s> <%s> %s',
+                    $this->_calendarRoot,
+                    \application::timer()->elapsed(),
+                    __METHOD__
+
+                  )
+
+                );
 
               }
 
@@ -71,6 +139,13 @@ class client {
         }
 
       }
+
+    }
+
+    if ( $debug) \sys::logger( sprintf('<calendarRoot : %s> %s', $this->_calendarRoot, __METHOD__));
+
+    if ( isset( $settings['calendars'])) {
+      $this->_calendars = (array)$settings['calendars'];
 
     }
 
@@ -134,10 +209,6 @@ class client {
                       }
 
                     }
-                    // else {
-                    //   \sys::dump( $first[200]);
-
-                    // }
 
                   }
 
@@ -155,6 +226,17 @@ class client {
 
       }
 
+      \sys::logger(
+        sprintf(
+          '<speed up by providing calendars : %s> <%s> %s',
+          \json_encode( $this->_calendars, JSON_UNESCAPED_SLASHES),
+          \application::timer()->elapsed(),
+          __METHOD__
+
+        )
+
+      );
+
     }
 
     return $this->_calendars;
@@ -162,44 +244,34 @@ class client {
   }
 
   public function getEvents( object $calendar, $from, $to) : array {
-    // printf(
-    //   '<br>time-range start="%sT000000" end="%sT000000"',
-    //   date( 'Ymd', strtotime( 'last monday')),
-    //   date( 'Ymd', strtotime( '+2 day')),
 
-    // );
+    $debug = false;
+    // $debug = true;
+
+    $start = new \DateTime( $from . ' 00:00:00');
+    $start->setTimezone( new \DateTimeZone( 'UTC'));
+    $start = $start->format('Ymd\THis');
+
+    $end = new \DateTime( $to . ' 00:00:00');
+    $end->setTimezone( new \DateTimeZone( 'UTC'));
+    $end = $end->format('Ymd\THis');
+
+    $filter = sprintf('<c:time-range  start="%s" end="%s"/>', $start, $end);
+
+    if ( $debug) \sys::logger( sprintf( '<%s> <%s> %s', $filter, \application::timer()->elapsed(), __METHOD__));
+
     $body = implode( '', [
       '<?xml version="1.0"?>',
       '<c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">',
         '<d:prop><d:getetag /><c:calendar-data /></d:prop>',
         '<c:filter>',
           '<c:comp-filter name="VCALENDAR">',
-            '<c:comp-filter name="VEVENT">',
-              sprintf(
-                '<c:time-range  start="%sT000000" end="%sT000000"/>',
-                date( 'Ymd', strtotime( $from)),
-                date( 'Ymd', strtotime( $to))
-
-              ),
-            '</c:comp-filter>',
+            sprintf( '<c:comp-filter name="VEVENT">%s</c:comp-filter>', $filter),
           '</c:comp-filter>',
         '</c:filter>',
       '</c:calendar-query>'
 
     ]);
-
-    /*
-    $body = implode( '', [
-      '<?xml version="1.0"?>',
-      '<c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">',
-        '<d:prop><d:getetag /><c:calendar-data /></d:prop>',
-        '<c:filter>',
-          '<c:comp-filter name="VCALENDAR" />',
-        '</c:filter>',
-      '</c:calendar-query>'
-
-    ]);
-    */
 
     $events = [];
     $key = '{urn:ietf:params:xml:ns:caldav}calendar-data';
@@ -223,6 +295,20 @@ class client {
         }
 
       }
+
+    }
+
+    if ( $debug) {
+      \sys::logger(
+        sprintf(
+          '<%s event/s> <%s> %s',
+          count( $events),
+          \application::timer()->elapsed(),
+          __METHOD__
+
+        )
+
+      );
 
     }
 

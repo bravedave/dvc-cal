@@ -19,6 +19,7 @@ class home extends dvc\cal\controller {
 
     if ( 'get-feed' == $action) {
       $name = $this->getPost('name');
+
       if ( 'Dingo' == $name) {
         $path = implode( DIRECTORY_SEPARATOR, [
           dvc\cal\config::dataPath(),

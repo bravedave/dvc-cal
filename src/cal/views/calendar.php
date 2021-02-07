@@ -101,11 +101,7 @@ $_accordion = strings::rand();  ?>
 
         }).then( d => {
           if ( 'ack' == d.response) {
-            $.each( d.data, ( i, event) => {
-              tab.trigger( 'event-add', { event : event, feed : feed })
-              // console.log( event);
-
-            });
+            $.each( d.data, ( i, event) => tab.trigger( 'event-add', { event : event, feed : feed }));
 
           }
 
@@ -237,7 +233,7 @@ $_accordion = strings::rand();  ?>
     let date = _.dayjs( p.event.start);
     // console.log( date.format('YYYY-MM-DD h:mm a'))
     let edate = _.dayjs( p.event.end);
-    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('h') + '"]';
+    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('H') + '"]';
     let container = $(key, tab);
     let allDay = (date.unix() + 86400) == edate.unix();
 
