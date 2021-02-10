@@ -155,7 +155,15 @@ class client {
 
     $url = sprintf( '%s%s.ics', $calendar->path, $vcalendar->VEVENT->UID);
     if ( $response = $this->_client->request('PUT', $url, $vcalendar->serialize())) {
-      if ( '201' == $response['statusCode']) {
+
+      if ( in_array(
+          $response['statusCode'],
+          [
+            '201',
+            '204'
+
+          ])) {
+
         $ret = new response;
         $ret->Id = $vcalendar->VEVENT->UID;
         $ret->etag = $response['headers']['etag'][0];
