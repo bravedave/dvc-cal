@@ -316,4 +316,26 @@ class client {
 
   }
 
+  public function createEvent( object $calendar, Sabre\VObject\Component\VCalendar $vcalendar) : response {
+
+    $url = sprintf( '%s%s.ics', $calendar->path, $vcalendar->VEVENT->UID);
+    if ( $response = $this->_client->request('PUT', $url, $vcalendar->serialize())) {
+      if ( '201' == $response['statusCode']) {
+        if ( isset( $response['headers']['etag'])) {
+          $ret = new response;
+          $ret->Id = $response['headers']['etag'][0];
+          $ret->ResponseType = 'CalendarItem';
+
+        }
+
+      }
+
+      return $ret;
+
+    }
+
+    return null;
+
+  }
+
 }

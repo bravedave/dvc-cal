@@ -56,20 +56,25 @@ class caldav extends Controller {
       /**
        * Creating a calendar object
        */
-      // $tz = new DateTimeZone( config::$TIMEZONE);
-      // $vcalendar = new \Sabre\VObject\Component\VCalendar([
-      //     'VEVENT' => [
-      //         'SUMMARY' => 'Birthday party!',
-      //         'DTSTART' => new \DateTime( date( 'Y-m-d') . ' 17:00:00', $tz),
-      //         'DTEND'   => new \DateTime( date( 'Y-m-d') . ' 23:00:00', $tz)
-      //     ]
-      // ]);
+      $tz = new DateTimeZone( config::$TIMEZONE);
+      $vcalendar = new \Sabre\VObject\Component\VCalendar([
+          'VEVENT' => [
+              'SUMMARY' => 'Birthday party!',
+              'DTSTART' => new \DateTime( date( 'Y-m-d') . ' 17:00:00', $tz),
+              'DTEND'   => new \DateTime( date( 'Y-m-d') . ' 23:00:00', $tz)
+          ]
+      ]);
 
-      // $url = sprintf( '%s%s.ics', $calendars['Personal']->path, $vcalendar->VEVENT->UID);
-      // printf('<br>create url : %s', $url);
-      // printf( '<pre>%s</pre>', $vcalendar->serialize());
-      // $response = $client->request('PUT', $url, $vcalendar->serialize());
-      // \sys::dump( $response, 'create entry', false);
+      // \sys::dump( $vcalendar, null, false);
+
+      if ( $calendar = $client->getCalendar( 'Personal')) {
+
+        \sys::dump( $calendar, null, false);
+
+        $response = $client->createEvent( $calendar, $vcalendar);
+        \sys::dump( $response, 'create entry', false);
+
+      }
 
       /**
        * Get today’s events.
