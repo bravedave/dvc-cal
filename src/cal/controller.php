@@ -103,8 +103,11 @@ class controller extends \Controller {
                 $reader = reader::readICS( $_event->data);
                 $feed = $reader->feed();
                 foreach ($feed as $e) {
-                  $e['etag'] = $_event->etag;
-                  $events[] = $e;
+                  $events[] = array_merge( [
+                    'uid' => $_event->uid,
+                    'etag' => $_event->etag
+
+                  ], $e);
 
                 }
 
@@ -238,27 +241,5 @@ class controller extends \Controller {
     $this->load( 'week');
 
   }
-
-  // public function x() {
-  //   $path = implode( DIRECTORY_SEPARATOR, [
-  //     __DIR__,
-  //     'data',
-  //     'australian_public_holidays.csv'
-
-  //   ]);
-
-  //   $start = '2021-01-01';
-  //   $end = '2021-12-31';
-
-  //   $reader = reader::readCSV( $path);
-  //   // $feed = $reader->feed( $start, $end);
-  //   $feed = $reader->feed( $start, $end, function( $evt) {
-  //     return 'qld' == $evt['location'];
-
-  //   });
-
-  //   \sys::dump( $feed);
-
-  // }
 
 }

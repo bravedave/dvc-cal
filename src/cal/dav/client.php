@@ -243,6 +243,46 @@ class client {
 
   }
 
+  public function getEvent( object $calendar, $uid) : object {
+
+    $debug = false;
+    // $debug = true;
+
+    $path = $calendar->path . $uid;
+    if ( $response = $this->_client->request('GET', $path)) {
+      if ( 200 == $response['statusCode']) {
+
+        return (object)[
+          'calendar' => $calendar->name,
+          'path' => $path,
+          'uid' => $uid,
+          'etag' => $response['headers']['etag'][0],
+          'data' => $response['body'],
+
+        ];
+
+      }
+
+    }
+
+    if ( $debug) {
+      \sys::logger(
+        sprintf(
+          '<%s event/s> <%s> %s',
+          count( $events),
+          \application::timer()->elapsed(),
+          __METHOD__
+
+        )
+
+      );
+
+    }
+
+    return null;
+
+  }
+
   public function getEvents( object $calendar, $from, $to) : array {
 
     $debug = false;
@@ -263,7 +303,7 @@ class client {
     $body = implode( '', [
       '<?xml version="1.0"?>',
       '<c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">',
-        '<d:prop><d:getetag /><c:calendar-data /></d:prop>',
+        '<d:prop><d:href /><d:getetag /><c:calendar-data /></d:prop>',
         '<c:filter>',
           '<c:comp-filter name="VCALENDAR">',
             sprintf( '<c:comp-filter name="VEVENT">%s</c:comp-filter>', $filter),
@@ -285,7 +325,8 @@ class client {
             $events[] = (object)[
               'calendar' => $calendar->name,
               'path' => $_k,
-              'etag' => $_e['{DAV:}getetag'],
+              'uid' => str_replace( $calendar->path, '', $_k),
+              'etag' => trim( $_e['{DAV:}getetag'], '"' ),
               'data' => $_e[$key],
 
             ];
