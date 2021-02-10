@@ -158,6 +158,7 @@ class client {
       if ( '201' == $response['statusCode']) {
         $ret = new response;
         $ret->Id = $vcalendar->VEVENT->UID;
+        $ret->etag = $response['headers']['etag'][0];
         $ret->ResponseType = 'CalendarItem';
 
       }
@@ -267,15 +268,16 @@ class client {
     $debug = false;
     // $debug = true;
 
-    $path = $calendar->path . $uid;
+    $id = preg_replace( '@\.ics$@i', '', $uid);
+    $path = $calendar->path . $id . '.ics';
     if ( $response = $this->_client->request('GET', $path)) {
       if ( 200 == $response['statusCode']) {
 
         return (object)[
           'calendar' => $calendar->name,
           'path' => $path,
-          'uid' => $uid,
-          'etag' => $response['headers']['etag'][0],
+          'uid' => $id,
+          'etag' => trim( $response['headers']['etag'][0], '"' ),
           'data' => $response['body'],
 
         ];
@@ -344,7 +346,7 @@ class client {
             $events[] = (object)[
               'calendar' => $calendar->name,
               'path' => $_k,
-              'uid' => str_replace( $calendar->path, '', $_k),
+              'uid' => preg_replace( '@\.ics$@i', '', str_replace( $calendar->path, '', $_k)),
               'etag' => trim( $_e['{DAV:}getetag'], '"' ),
               'data' => $_e[$key],
 

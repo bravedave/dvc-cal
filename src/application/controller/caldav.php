@@ -25,7 +25,7 @@ class caldav extends Controller {
       // printf( '<br>principal : %s', $client->principal);
 
       if ( $calendar = $client->getCalendar( 'Personal')) {
-        sys::dump( $client->getEvent( $calendar, 'sabre-vobject-071e337b-f7af-4f1d-ab20-9ae5107b9d25.ics'));
+        // sys::dump( $client->getEvent( $calendar, 'sabre-vobject-071e337b-f7af-4f1d-ab20-9ae5107b9d25.ics'));
 
         $from = date( 'Y-m-d', strtotime( 'last monday'));
         $to = date( 'Y-m-d', strtotime( '+2 day'));

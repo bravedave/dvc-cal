@@ -11,6 +11,8 @@
 namespace dvc\cal\dav;
 
 class response {
+  public $etag = '';
+
   public $Id = '';
 
   public $ResponseType = '';  // CalendarItem
