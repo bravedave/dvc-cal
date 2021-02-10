@@ -29,13 +29,14 @@ class caldav extends Controller {
         $to = date( 'Y-m-d', strtotime( '+2 day'));
         $_events = $client->getEvents( $calendar, $from, $to);
 
-        // \sys::dump( $_events, 'Personal Calendar');
+        // \sys::dump( $_events, 'Personal Calendar', false);
 
         $events = [];
         foreach ($_events as $_event) {
           $reader = dvc\cal\reader::readICS( $_event->data);
           $feed = $reader->feed( $from, $to);
           foreach ($feed as $e) {
+            $e['etag'] = $_event->etag;
             $events[] = $e;
 
           }
@@ -71,8 +72,8 @@ class caldav extends Controller {
 
         \sys::dump( $calendar, null, false);
 
-        $response = $client->createEvent( $calendar, $vcalendar);
-        \sys::dump( $response, 'create entry', false);
+        // $response = $client->createEvent( $calendar, $vcalendar);
+        // \sys::dump( $response, 'create entry', false);
 
       }
 
