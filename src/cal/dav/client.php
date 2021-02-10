@@ -151,7 +151,7 @@ class client {
 
   }
 
-  public function createEvent( object $calendar, Sabre\VObject\Component\VCalendar $vcalendar) : response {
+  public function createEvent( object $calendar, Sabre\VObject\Component\VCalendar $vcalendar) : ?response {
 
     $url = sprintf( '%s%s.ics', $calendar->path, $vcalendar->VEVENT->UID);
     if ( $response = $this->_client->request('PUT', $url, $vcalendar->serialize())) {
@@ -161,9 +161,11 @@ class client {
         $ret->etag = $response['headers']['etag'][0];
         $ret->ResponseType = 'CalendarItem';
 
+        return $ret;
+
       }
 
-      return $ret;
+      \sys::logger( sprintf('<%s> %s', print_r( $response, true), __METHOD__));
 
     }
 
