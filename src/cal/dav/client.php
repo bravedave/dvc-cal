@@ -243,7 +243,7 @@ class client {
 
   }
 
-  public function getEvent( object $calendar, $uid) : object {
+  public function getEvent( object $calendar, $uid) : ?object {
 
     $debug = false;
     // $debug = true;
