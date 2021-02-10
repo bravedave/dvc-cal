@@ -102,7 +102,11 @@ class controller extends \Controller {
               foreach ($_events as $_event) {
                 $reader = reader::readICS( $_event->data);
                 $feed = $reader->feed();
-                foreach ($feed as $e) $events[] = $e;
+                foreach ($feed as $e) {
+                  $e['etag'] = $_event->etag;
+                  $events[] = $e;
+
+                }
 
               }
 
