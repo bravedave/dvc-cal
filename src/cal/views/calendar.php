@@ -123,6 +123,7 @@ $_accordion = strings::rand();  ?>
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
     let container = $(key, tab);
     let allDay = (date.unix() + 86400) == edate.unix();
+    let isEvent = date.unix() == edate.unix();
 
     let row = $('<div class="form-row border" item></div>');
     row
@@ -138,7 +139,14 @@ $_accordion = strings::rand();  ?>
 
     });
 
-    let timeLabel = allDay ? 'all day' : date.format( 'h:mm a') + ' - ' + edate.format( 'h:mm a');
+    let fmtStart = 0 == date.minute() ? date.format('h') : date.format( 'h:mm');
+    if ( isEvent) {
+      fmtStart = 0 == date.minute() ? date.format('h a') : date.format( 'h:mm a');
+
+    }
+
+    let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format( 'h:mm a');
+    let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' + fmtEnd);
     $('<div class="col-5 col-md-4 col-xl-3 py-1 text-truncate"></div>')
     .html( timeLabel)
     .appendTo( row);
