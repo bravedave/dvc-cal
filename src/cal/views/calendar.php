@@ -147,7 +147,7 @@ $_accordion = strings::rand();  ?>
 
     let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format( 'h:mm a');
     let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' + fmtEnd);
-    $('<div class="col-5 col-md-4 col-xl-3 py-1 text-truncate"></div>')
+    $('<div class="col-4 col-md-3 col-xl-2 py-1 text-truncate"></div>')
     .html( timeLabel)
     .appendTo( row);
 
