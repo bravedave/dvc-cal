@@ -181,6 +181,19 @@ class client {
 
   }
 
+  public function deleteEvent( object $calendar, $uid) : bool {
+
+    $id = preg_replace( '@\.ics$@i', '', $uid);
+    $path = $calendar->path . $id . '.ics';
+    if ( $response = $this->_client->request('DELETE', $path)) {
+      return ( 200 == $response['statusCode']);
+
+    }
+
+    return false;
+
+  }
+
   public function getCalendar( $name) : ?object {
     $calendars = $this->getCalendars();
 
