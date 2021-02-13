@@ -18,7 +18,7 @@ use Sabre;
 class client {
   protected $_client;
 
-  protected $_calendarRoot;
+  protected $_calendarRoot = '';
 
   protected $_calendars = [];
 
@@ -83,7 +83,7 @@ class client {
       if ( $debug) \sys::logger( sprintf('<principal : %s> %s', $this->principal, __METHOD__));
 
       if ( isset( $settings['calendarRoot'])) {
-        $this->_calendarRoot = $settings['calendarRoot'];
+        $this->_calendarRoot = (string)$settings['calendarRoot'];
 
       }
       else {
@@ -203,6 +203,11 @@ class client {
     }
 
     return null;
+
+  }
+
+  public function getCalendarRoot() : string {
+    return $this->_calendarRoot;
 
   }
 
