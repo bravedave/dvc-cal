@@ -127,6 +127,7 @@ $_accordion = strings::rand();  ?>
 
     let row = $('<div class="form-row border" item></div>');
     row
+    .addClass('pointer.calendar')
     .data('data', p)
     .data('time', date.format('YYYY-MM-DD hh:mm'))
     .data('unix', date.unix())
@@ -247,6 +248,7 @@ $_accordion = strings::rand();  ?>
 
     let row = $('<div class="form-row border" item></div>');
     row
+    .addClass('pointer.calendar')
     .css( 'background-color', p.feed.color)
     .data('data', p)
     .data('time', date.format('YYYY-MM-DD hh:mm'))
@@ -356,6 +358,7 @@ $_accordion = strings::rand();  ?>
 
     let row = $('<div class="form-row border" item></div>');
     row
+    .addClass('pointer.calendar')
     .css( 'background-color', p.feed.color)
     .data('data', p)
     .data('time', date.format('YYYY-MM-DD hh:mm'))
