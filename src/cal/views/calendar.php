@@ -127,7 +127,7 @@ $_accordion = strings::rand();  ?>
 
     let row = $('<div class="form-row border" item></div>');
     row
-    .addClass('pointer.calendar')
+    .addClass('pointer-calendar')
     .data('data', p)
     .data('time', date.format('YYYY-MM-DD hh:mm'))
     .data('unix', date.unix())
@@ -248,7 +248,7 @@ $_accordion = strings::rand();  ?>
 
     let row = $('<div class="form-row border" item></div>');
     row
-    .addClass('pointer.calendar')
+    .addClass('pointe-.calendar')
     .css( 'background-color', p.feed.color)
     .data('data', p)
     .data('time', date.format('YYYY-MM-DD hh:mm'))
@@ -300,7 +300,7 @@ $_accordion = strings::rand();  ?>
     let url = '<?= $this->route ?>/week?seed=' + date.format( 'YYYY-MM-DD');
 
     tab.load( url, html => {
-      $('<button type="button" class="btn btn-light btn-sm flex-fill"><i class="bi bi-chevron-double-left pointer"></i></button>')
+      $('<button type="button" class="btn btn-light btn-sm flex-fill"><i class="bi bi-chevron-double-left"></i></button>')
       .on( 'click', function( e) {
         e.stopPropagation();e.preventDefault();
 
@@ -310,7 +310,7 @@ $_accordion = strings::rand();  ?>
       })
       .appendTo( $('[ctrl-box]', tab))
 
-      $('<button type="button" class="btn btn-light btn-sm flex-fill"><i class="bi bi-chevron-double-right pointer"></i></button>')
+      $('<button type="button" class="btn btn-light btn-sm flex-fill"><i class="bi bi-chevron-double-right"></i></button>')
       .on( 'click', function( e) {
         e.stopPropagation();e.preventDefault();
 
@@ -358,7 +358,7 @@ $_accordion = strings::rand();  ?>
 
     let row = $('<div class="form-row border" item></div>');
     row
-    .addClass('pointer.calendar')
+    .addClass('pointer-calendar')
     .css( 'background-color', p.feed.color)
     .data('data', p)
     .data('time', date.format('YYYY-MM-DD hh:mm'))
@@ -430,7 +430,7 @@ $_accordion = strings::rand();  ?>
 
     tab.load( url, html => {
 
-      $('<button type="button" class="btn btn-light btn-sm"><i class="bi bi-chevron-double-left pointer"></i></button>')
+      $('<button type="button" class="btn btn-light btn-sm"><i class="bi bi-chevron-double-left"></i></button>')
       .on( 'click', function( e) {
         e.stopPropagation();e.preventDefault();
 
@@ -440,7 +440,7 @@ $_accordion = strings::rand();  ?>
       })
       .prependTo( $('[heading]', tab))
 
-      $('<button type="button" class="btn btn-light btn-sm"><i class="bi bi-chevron-double-right pointer"></i></button>')
+      $('<button type="button" class="btn btn-light btn-sm"><i class="bi bi-chevron-double-right"></i></button>')
       .on( 'click', function( e) {
         e.stopPropagation();e.preventDefault();
 
