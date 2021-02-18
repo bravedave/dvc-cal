@@ -17,33 +17,40 @@ use strings;  ?>
   <div class="nav-item h5">Feeds</div>
   <?php
   foreach ($this->feeds as $feed) {
-    $active = 'yes' == currentUser::option( 'cal-feed-' . $feed->name);
+    if ( '---' == $feed->name) {
+      print '<div class="nav-item"><hr class="my-1"></div>';
 
-    ?>
-    <div class="nav-item">
-      <a class="nav-link" data-name="<?= $feed->name ?>" data-active="<?= $active ? 'yes' : 'no' ?>" href="#">
-        <?php
-          printf(
-            '<i class="bi d-inline-flex %s" style="color: %s"></i>',
-            $active ? 'bi-check-square-fill bg-dark' : 'bi-square',
-            $feed->color
+    }
+    else {
+      $active = 'yes' == currentUser::option( 'cal-feed-' . $feed->name);
 
-          );
+      ?>
+      <div class="nav-item">
+        <a class="nav-link" data-name="<?= $feed->name ?>" data-active="<?= $active ? 'yes' : 'no' ?>" href="#">
+          <?php
+            printf(
+              '<i class="bi d-inline-flex %s" style="color: %s"></i>',
+              $active ? 'bi-check-square-fill bg-dark' : 'bi-square',
+              $feed->color
 
-        if ( isset( $feed->personal) && $feed->personal) {
-          printf( ' <strong>%s</strong>', $feed->name);
+            );
 
-        }
-        else {
-          printf( ' <span>%s</span>', $feed->name);
+          if ( isset( $feed->personal) && $feed->personal) {
+            printf( ' <strong>%s</strong>', $feed->name);
 
-        } ?>
+          }
+          else {
+            printf( ' <span>%s</span>', $feed->name);
 
-      </a>
+          } ?>
 
-    </div>
+        </a>
 
-  <?php
+      </div>
+
+    <?php
+    }
+
   } ?>
 
 </div>
