@@ -11,6 +11,7 @@
 namespace dvc\cal;
 
 use currentUser;
+use dvc\ews\calendaritem;
 use Json;
 use strings;
 
@@ -44,7 +45,33 @@ class controller extends \Controller {
 	protected function postHandler() {
     $action = $this->getPost('action');
 
-		if ( 'get-active-feeds' == $action) {
+		if ( 'appointment-save' == $action) {
+      $date = $this->getPost('date');
+      $start = $this->getPost('start');
+      $end = $this->getPost('end');
+
+      if ( strtotime( $date) > 0) {
+        $start = $date . ' ' . $start;
+        $end = $date . ' ' . $end;
+
+        $app = new calendaritem;
+
+        $app->subject = $this->getPost( 'subject');
+        $app->notes = $this->getPost( 'notes');
+        $app->location = $this->getPost( 'location');
+
+        $app->startUTC = $start;
+        $app->endUTC = $end;
+
+        if ( dav\appointment::create( $app)) {
+          Json::ack( $action);
+
+        } else { Json::nak( $action); }
+
+      } else { Json::nak( $action); }
+
+    }
+    elseif ( 'get-active-feeds' == $action) {
       $a = [];
       foreach ($this->feeds as $feed) {
         if ( 'yes' == currentUser::option( 'cal-feed-' . $feed->name)) {
@@ -198,6 +225,16 @@ class controller extends \Controller {
     ];
 
     $this->load( 'agenda');
+
+  }
+
+  public function appointment() {
+    $this->data = (object)[
+      'title' => $this->title = 'Appointment'
+
+    ];
+
+    $this->load( 'appointment');
 
   }
 
