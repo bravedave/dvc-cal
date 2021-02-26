@@ -249,6 +249,7 @@ $_accordion = strings::rand();  ?>
     let row = $('<div class="form-row border" item></div>');
     row
     .addClass('pointe-.calendar')
+    .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
     .css( 'background-color', p.feed.color)
     .data('data', p)
     .data('time', date.format('YYYY-MM-DD hh:mm'))
@@ -359,6 +360,7 @@ $_accordion = strings::rand();  ?>
     let row = $('<div class="form-row border" item></div>');
     row
     .addClass('pointer-calendar')
+    .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
     .css( 'background-color', p.feed.color)
     .data('data', p)
     .data('time', date.format('YYYY-MM-DD hh:mm'))

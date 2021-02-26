@@ -28,10 +28,19 @@ use strings;  ?>
       <div class="nav-item">
         <a class="nav-link" data-name="<?= $feed->name ?>" data-active="<?= $active ? 'yes' : 'no' ?>" href="#">
           <?php
+            $color = $feed->color;
+            $backgroundColor = '#000';
+            if ( isset( $feed->forecolor) && $feed->forecolor) {
+              $backgroundColor = $feed->forecolor;
+
+            }
+
+            // effectively color is reversed
             printf(
-              '<i class="bi d-inline-flex %s" style="color: %s"></i>',
-              $active ? 'bi-check-square-fill bg-dark' : 'bi-square',
-              $feed->color
+              '<i class="bi d-inline-flex %s" style="color: %s; background-color: %s;"></i>',
+              $active ? 'bi-check-square-fill' : 'bi-square',
+              $color,
+              $backgroundColor
 
             );
 
