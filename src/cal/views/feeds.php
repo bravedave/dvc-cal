@@ -38,7 +38,7 @@ use strings;  ?>
             // effectively color is reversed
             printf(
               '<i class="bi d-inline-flex %s" style="color: %s; background-color: %s;"></i>',
-              $active ? 'bi-check-square-fill' : 'bi-square',
+              $active ? 'bi-check-square-fill' : 'bi-square-fill',
               $color,
               $backgroundColor
 
@@ -91,7 +91,7 @@ use strings;  ?>
         $('.bi', _me)
         .removeClass()
         .addClass( 'bi d-inline-flex')
-        .addClass( 'yes' == newState ? 'bi-check-square-fill bg-dark' : 'bi-square');
+        .addClass( 'yes' == newState ? 'bi-check-square-fill bg-dark' : 'bi-square-fill');
 
         $(document).trigger('load-active-feeds');
 
