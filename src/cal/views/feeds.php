@@ -91,7 +91,7 @@ use strings;  ?>
         $('.bi', _me)
         .removeClass()
         .addClass( 'bi d-inline-flex')
-        .addClass( 'yes' == newState ? 'bi-check-square-fill bg-dark' : 'bi-square-fill');
+        .addClass( 'yes' == newState ? 'bi-check-square-fill' : 'bi-square-fill');
 
         $(document).trigger('load-active-feeds');
 
