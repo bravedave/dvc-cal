@@ -26,10 +26,13 @@ for ($i=0; $i < 7; $i++) {
       <div class="col bg-light py-2">
         <div class="d-flex">
           <h5 class="flex-fill m-0 pt-2"><?= $seed->format( 'D M j') ?></h5>
-        <?php if ( $haveCalendar) { ?>
-          <button type="button" class="btn btn-light" data-role="btn-calendar-add" data-date="<?= $seed->format( 'Y-m-d') ?>"><i class="bi bi-calendar-plus"></i></button>
+          <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" id="<?= $_uid = strings::rand() ?>">
+            <?php if ( $haveCalendar) { ?>
+              <button type="button" class="btn btn-light" data-role="btn-calendar-add" data-date="<?= $seed->format( 'Y-m-d') ?>"><i class="bi bi-calendar-plus"></i></button>
 
-        <?php } // if ( $haveCalendar) { ?>
+            <?php } // if ( $haveCalendar) { ?>
+          </div>
+          <script>$(document).trigger('calendar-toolbar-created', '#<?= $_uid ?>');</script>
 
         </div>
 
