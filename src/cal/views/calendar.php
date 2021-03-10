@@ -136,6 +136,7 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
+      _data.originalEvent = e;
       $(document).trigger( 'calendar-event-click', _data);
 
     })
@@ -143,6 +144,7 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
+      _data.originalEvent = e;
       $(document).trigger( 'calendar-event-context', _data);
 
     });
@@ -266,6 +268,7 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
+      _data.originalEvent = e;
       $(document).trigger( 'calendar-event-click', _data);
 
     })
@@ -273,6 +276,7 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
+      _data.originalEvent = e;
       $(document).trigger( 'calendar-event-context', _data);
 
     });
@@ -384,6 +388,7 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
+      _data.originalEvent = e;
       $(document).trigger( 'calendar-event-click', _data);
 
     })
@@ -391,6 +396,7 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
+      _data.originalEvent = e;
       $(document).trigger( 'calendar-event-context', _data);
 
     });
