@@ -141,6 +141,9 @@ $_accordion = strings::rand();  ?>
 
     })
     .on( 'contextmenu', function( e) {
+      if ( e.shiftKey)
+        return;
+
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
@@ -273,6 +276,9 @@ $_accordion = strings::rand();  ?>
 
     })
     .on( 'contextmenu', function( e) {
+      if ( e.shiftKey)
+        return;
+
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
@@ -393,6 +399,9 @@ $_accordion = strings::rand();  ?>
 
     })
     .on( 'contextmenu', function( e) {
+      if ( e.shiftKey)
+        return;
+
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
