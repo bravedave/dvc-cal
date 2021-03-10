@@ -136,7 +136,14 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
-      $(document).trigger( 'edit-calendar-event', _data);
+      $(document).trigger( 'calendar-event-click', _data);
+
+    })
+    .on( 'contextmenu', function( e) {
+      e.stopPropagation();e.preventDefault();
+      let _me = $(this);
+      let _data = _me.data();
+      $(document).trigger( 'calendar-event-context', _data);
 
     });
 
@@ -259,7 +266,14 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
-      $(document).trigger( 'edit-calendar-event', _data);
+      $(document).trigger( 'calendar-event-click', _data);
+
+    })
+    .on( 'contextmenu', function( e) {
+      e.stopPropagation();e.preventDefault();
+      let _me = $(this);
+      let _data = _me.data();
+      $(document).trigger( 'calendar-event-context', _data);
 
     });
 
@@ -370,9 +384,16 @@ $_accordion = strings::rand();  ?>
       e.stopPropagation();e.preventDefault();
       let _me = $(this);
       let _data = _me.data();
-      $(document).trigger( 'edit-calendar-event', _data);
+      $(document).trigger( 'calendar-event-click', _data);
 
     })
+    .on( 'contextmenu', function( e) {
+      e.stopPropagation();e.preventDefault();
+      let _me = $(this);
+      let _data = _me.data();
+      $(document).trigger( 'calendar-event-context', _data);
+
+    });
 
     $('<div class="col-4 col-xl-3 py-1 text-truncate"></div>')
     .html( date.format( 'h:mma').replace( /m$/, ''))
