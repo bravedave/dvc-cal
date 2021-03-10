@@ -84,6 +84,7 @@ class reader {
         'startUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtstart)),
         'endUTC' => date('c', $ical->iCalDateToUnixTimestamp($event->dtend)),
         'location' => $event->location,
+        'uid' => $event->uid,
         'description' => $description,
         'data' => $event->printData()
 
