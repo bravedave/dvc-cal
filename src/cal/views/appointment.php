@@ -16,7 +16,7 @@ use theme;  ?>
   <input type="hidden" name="action" value="appointment-save">
 
   <div class="modal fade" tabindex="-1" role="dialog" id="<?= $_modal = strings::rand() ?>" aria-labelledby="<?= $_modal ?>Label" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header <?= theme::modalHeader() ?> py-2">
           <h5 class="modal-title" id="<?= $_modal ?>Label"><?= $this->title ?></h5>
@@ -37,13 +37,13 @@ use theme;  ?>
               <div class="form-row">
                 <div class="col">
                   <div class="input-group">
-                    <input type="text" class="form-control" name="start" required>
+                    <input type="text" class="form-control" name="start" placeholder="start" required>
 
                     <div class="input-group-append">
                       <div class="input-group-text">-</div>
                     </div>
 
-                    <input type="text" class="form-control" name="end" required>
+                    <input type="text" class="form-control" name="end" placeholder="end" required>
 
                   </div>
 
