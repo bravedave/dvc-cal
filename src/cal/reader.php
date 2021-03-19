@@ -38,12 +38,8 @@ class reader {
 
       // \sys::dump( $event);
 
-      $date = new DateTime( $event['Date']);
-      $date->setTime(0, 0, 0);
+      $date = new DateTime( $event['Date'], new \DateTimeZone( config::$TIMEZONE));
       $end = $date->add( new DateInterval('P1D'));
-
-      $date->setTimezone( new \DateTimeZone( config::$TIMEZONE));
-      $end->setTimezone( new \DateTimeZone( config::$TIMEZONE));
 
       $id = sprintf('%s-%s@pub', $event['Date'], preg_replace( '@[^a-z0-9]@i', '-', $event['Holiday Name']));
 
