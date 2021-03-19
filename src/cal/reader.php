@@ -39,6 +39,7 @@ class reader {
       // \sys::dump( $event);
 
       $date = new DateTime( $event['Date'], new \DateTimeZone( config::$TIMEZONE));
+      $date->setTime(0,0,0);
       $end = $date->add( new DateInterval('P1D'));
 
       $id = sprintf('%s-%s@pub', $event['Date'], preg_replace( '@[^a-z0-9]@i', '-', $event['Holiday Name']));
