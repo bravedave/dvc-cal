@@ -39,6 +39,7 @@ class reader {
       // \sys::dump( $event);
 
       $date = new DateTime( $event['Date']);
+      $date->setTime(0, 0, 0);
       $end = $date->add( new DateInterval('P1D'));
 
       $date->setTimezone( new \DateTimeZone( config::$TIMEZONE));
