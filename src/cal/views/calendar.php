@@ -120,64 +120,84 @@ $_accordion = strings::rand();  ?>
     let tab = $('#<?= $_accordion ?>-agenda-tab');
     let date = _.dayjs( p.event.start);
     let edate = _.dayjs( p.event.end);
-    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
-    let container = $(key, tab);
-    let allDay = (date.unix() + 86400) == edate.unix();
+    let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format( 'YYYYMMDD');
     let isEvent = date.unix() == edate.unix();
 
-    let row = $('<div class="form-row border" item></div>');
-    row
-    .addClass('pointer-calendar')
-    .data('data', p)
-    .data('time', date.format('YYYY-MM-DD hh:mm'))
-    .data('unix', date.unix())
-    .data('allday', allDay ? 'yes' : 'no')
-    .on( 'click', function( e) {
-      e.stopPropagation();e.preventDefault();
-      let _me = $(this);
-      let _data = _me.data();
-      _data.originalEvent = e;
-      $(document).trigger( 'calendar-event-click', _data);
+    let rowMaker = (p, date, edate, allDay) => {
 
-    })
-    .on( 'contextmenu', function( e) {
-      if ( e.shiftKey)
-        return;
+      let row = $('<div class="form-row border pointer-calendar" item></div>');
+      row
+      .data('data', p)
+      .data('time', date.format('YYYY-MM-DD hh:mm'))
+      .data('unix', date.unix())
+      .data('allday', allDay ? 'yes' : 'no')
+      .on( 'click', function( e) {
+        e.stopPropagation();e.preventDefault();
+        let _me = $(this);
+        let _data = _me.data();
+        _data.originalEvent = e;
+        $(document).trigger( 'calendar-event-click', _data);
 
-      e.stopPropagation();e.preventDefault();
-      let _me = $(this);
-      let _data = _me.data();
-      _data.originalEvent = e;
-      $(document).trigger( 'calendar-event-context', _data);
+      })
+      .on( 'contextmenu', function( e) {
+        if ( e.shiftKey)
+          return;
 
-    });
+        e.stopPropagation();e.preventDefault();
+        let _me = $(this);
+        let _data = _me.data();
+        _data.originalEvent = e;
+        $(document).trigger( 'calendar-event-context', _data);
 
-    let fmtStart = 0 == date.minute() ? date.format('h') : date.format( 'h:mm');
-    if ( isEvent) {
-      fmtStart = 0 == date.minute() ? date.format('h a') : date.format( 'h:mm a');
+      });
 
-    }
-
-    let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format( 'h:mm a');
-    let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' + fmtEnd);
-    $('<div class="col-4 col-md-3 col-xl-2 py-1 text-truncate"></div>')
-    .html( timeLabel)
-    .appendTo( row);
-
-    $('<div class="col-auto"><i class="bi bi-square-fill"></i></div>').css('color', p.feed.color).appendTo( row);
-
-    $('<div class="col"></div>')
-    .html( p.event.summary)
-    .appendTo( row);
-
-    if ( allDay) {
-      let items = $( '> [item]', container);
-      if ( items.length > 0) {
-        row.insertBefore( items[0]);
+      let fmtStart = 0 == date.minute() ? date.format('h') : date.format( 'h:mm');
+      if ( isEvent) {
+        fmtStart = 0 == date.minute() ? date.format('h a') : date.format( 'h:mm a');
 
       }
-      else {
-        row.appendTo( container);
+
+      let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format( 'h:mm a');
+      let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' + fmtEnd);
+      $('<div class="col-4 col-md-3 col-xl-2 py-1 text-truncate"></div>')
+      .html( timeLabel)
+      .appendTo( row);
+
+      $('<div class="col-auto"><i class="bi bi-square-fill"></i></div>').css('color', p.feed.color).appendTo( row);
+
+      $('<div class="col"></div>')
+      .html( p.event.summary)
+      .appendTo( row);
+
+      return row;
+
+    };
+
+    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
+    if ( allDay) {
+      let insertEvt = (p, date, edate, allDay, container) => {
+        let items = $( '> [item]', container);
+        if ( items.length > 0) {
+          rowMaker(p, date, edate, allDay).insertBefore( items[0]);
+
+        }
+        else {
+          rowMaker(p, date, edate, allDay).appendTo( container);
+
+        }
+
+      }
+
+      insertEvt( p, date, edate, allDay, $(key, tab));
+      if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
+        for (let i = 1; i < 30; i++) {
+          let _date = date.add(i, 'days');
+          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
+
+          key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"]';
+          insertEvt( p, date, edate, allDay, $(key, tab));
+
+        }
 
       }
 
@@ -185,6 +205,7 @@ $_accordion = strings::rand();  ?>
     else {
       // insert at correct location
       let before = false;
+      let container = $(key, tab);
       $( '> [item]', container).each((i,row) => {
         let _row = $(row);
         let _data = _row.data();
@@ -201,11 +222,11 @@ $_accordion = strings::rand();  ?>
       });
 
       if ( !!before) {
-        row.insertBefore( before);
+        rowMaker(p, date, edate, allDay).insertBefore( before);
 
       }
       else {
-        row.appendTo( container);
+        rowMaker(p, date, edate, allDay).appendTo( container);
 
       }
 
@@ -254,68 +275,99 @@ $_accordion = strings::rand();  ?>
     let date = _.dayjs( p.event.start);
     // console.log( date.format('YYYY-MM-DD h:mm a'))
     let edate = _.dayjs( p.event.end);
-    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('H') + '"]';
-    let container = $(key, tab);
-    let allDay = (date.unix() + 86400) == edate.unix();
+    let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format( 'YYYYMMDD');
 
-    let row = $('<div class="form-row border" item></div>');
-    row
-    .addClass('pointe-.calendar')
-    .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
-    .css( 'background-color', p.feed.color)
-    .data('data', p)
-    .data('time', date.format('YYYY-MM-DD hh:mm'))
-    .data('unix', date.unix())
-    .data('allday', allDay ? 'yes' : 'no')
-    .on( 'click', function( e) {
-      e.stopPropagation();e.preventDefault();
-      let _me = $(this);
-      let _data = _me.data();
-      _data.originalEvent = e;
-      $(document).trigger( 'calendar-event-click', _data);
+    let rowMaker = (p, date, edate, allDay) => {
+      let row = $('<div class="form-row pointer-calendar border" item></div>');
 
-    })
-    .on( 'contextmenu', function( e) {
-      if ( e.shiftKey)
-        return;
+      row
+      .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
+      .css( 'background-color', p.feed.color)
+      .data('data', p)
+      .data('time', date.format('YYYY-MM-DD hh:mm'))
+      .data('unix', date.unix())
+      .data('allday', allDay ? 'yes' : 'no')
+      .on( 'click', function( e) {
+        e.stopPropagation();e.preventDefault();
+        let _me = $(this);
+        let _data = _me.data();
+        _data.originalEvent = e;
+        $(document).trigger( 'calendar-event-click', _data);
 
-      e.stopPropagation();e.preventDefault();
-      let _me = $(this);
-      let _data = _me.data();
-      _data.originalEvent = e;
-      $(document).trigger( 'calendar-event-context', _data);
+      })
+      .on( 'contextmenu', function( e) {
+        if ( e.shiftKey)
+          return;
 
-    });
+        e.stopPropagation();e.preventDefault();
+        let _me = $(this);
+        let _data = _me.data();
+        _data.originalEvent = e;
+        $(document).trigger( 'calendar-event-context', _data);
 
-    $('<div class="col py-1 text-truncate"></div>')
-    .html( p.event.summary)
-    .appendTo( row);
+      });
 
-    // insert at correct location
-    let before = false;
-    $( '> [item]', container).each((i,row) => {
-      let _row = $(row);
-      let _data = _row.data();
+      $('<div class="col py-1 text-truncate"></div>')
+      .html( p.event.summary)
+      .appendTo( row);
 
-      if ( 'yes' != _data.allDay) {
-        if ( date.unix() < _data.unix) {
-          before = row;
-          return false; // jQuery break
+      return row;
+
+    };
+
+    // console.log( date.format('YYYY-MM-DD'), edate.format('YYYY-MM-DD'));
+    if ( allDay) {
+      let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="day"]';
+      $(key, tab).append(rowMaker( p, date, edate, allDay));
+
+      // console.log( date.format('YYYY-MM-DD'), edate.format('YYYY-MM-DD'));
+      if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
+        for (let i = 1; i < 30; i++) {
+          let _date = date.add(i, 'days');
+          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
+
+          // console.log( _date.format('YYYY-MM-DD'));
+          key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"][data-slot="day"]';
+          $(key, tab).append( rowMaker( p, _date, edate, allDay));
 
         }
 
       }
 
-    });
-
-    if ( !!before) {
-      row.insertBefore( before);
+      $('[day-slot]', tab).removeClass('d-none');
 
     }
     else {
-      row.appendTo( container);
+      let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('H') + '"]';
+      let container = $(key, tab);
+      // insert at correct location
+      let before = false;
+      $( '> [item]', container).each((i,row) => {
+        let _row = $(row);
+        let _data = _row.data();
+
+        if ( 'yes' != _data.allDay) {
+          if ( date.unix() < _data.unix) {
+            before = row;
+            return false; // jQuery break
+
+          }
+
+        }
+
+      });
+
+      if ( !!before) {
+        rowMaker( p, date, edate, allDay).insertBefore( before);
+
+      }
+      else {
+        rowMaker( p, date, edate, allDay).appendTo( container);
+
+      }
 
     }
+
 
   })
   .on( 'update-tab', function(e) {
@@ -377,55 +429,81 @@ $_accordion = strings::rand();  ?>
     let tab = $('#<?= $_accordion ?>-month-tab');
     let date = _.dayjs( p.event.start);
     let edate = _.dayjs( p.event.end);
-    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
-    let container = $(key, tab);
-    let allDay = (date.unix() + 86400) == edate.unix();
+    let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format( 'YYYYMMDD');
 
-    let row = $('<div class="form-row border" item></div>');
-    row
-    .addClass('pointer-calendar')
-    .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
-    .css( 'background-color', p.feed.color)
-    .data('data', p)
-    .data('time', date.format('YYYY-MM-DD hh:mm'))
-    .data('unix', date.unix())
-    .data('allday', allDay ? 'yes' : 'no')
-    .on( 'click', function( e) {
-      e.stopPropagation();e.preventDefault();
-      let _me = $(this);
-      let _data = _me.data();
-      _data.originalEvent = e;
-      $(document).trigger( 'calendar-event-click', _data);
+    let rowMaker = (p, date, edate, allDay) => {
+      let row = $('<div class="form-row border" item></div>');
+      row
+      .addClass('pointer-calendar')
+      .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
+      .css( 'background-color', p.feed.color)
+      .data('data', p)
+      .data('time', date.format('YYYY-MM-DD hh:mm'))
+      .data('unix', date.unix())
+      .data('allday', allDay ? 'yes' : 'no')
+      .on( 'click', function( e) {
+        e.stopPropagation();e.preventDefault();
+        let _me = $(this);
+        let _data = _me.data();
+        _data.originalEvent = e;
+        $(document).trigger( 'calendar-event-click', _data);
 
-    })
-    .on( 'contextmenu', function( e) {
-      if ( e.shiftKey)
-        return;
+      })
+      .on( 'contextmenu', function( e) {
+        if ( e.shiftKey)
+          return;
 
-      e.stopPropagation();e.preventDefault();
-      let _me = $(this);
-      let _data = _me.data();
-      _data.originalEvent = e;
-      $(document).trigger( 'calendar-event-context', _data);
+        e.stopPropagation();e.preventDefault();
+        let _me = $(this);
+        let _data = _me.data();
+        _data.originalEvent = e;
+        $(document).trigger( 'calendar-event-context', _data);
 
-    });
+      });
 
-    $('<div class="col-4 col-xl-3 py-1 text-truncate"></div>')
-    .html( date.format( 'h:mma').replace( /m$/, ''))
-    .appendTo( row);
-
-    $('<div class="col py-1 text-truncate"></div>')
-    .html( p.event.summary)
-    .appendTo( row);
-
-    if ( allDay) {
-      let items = $( '> [item]', container);
-      if ( items.length > 0) {
-        row.insertBefore( items[0]);
+      if ( !allDay) {
+        $('<div class="col-4 col-xl-3 py-1 text-truncate"></div>')
+        .html( date.format( 'h:mma').replace( /m$/, ''))
+        .appendTo( row);
 
       }
-      else {
-        row.appendTo( container);
+
+      $('<div class="col py-1 text-truncate"></div>')
+      .html( p.event.summary)
+      .appendTo( row);
+
+      return row;
+
+    };
+
+    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
+    if ( allDay) {
+      let insertEvt = (p, date, edate, allDay, container) => {
+        let items = $( '> [item]', container);
+        if ( items.length > 0) {
+          rowMaker( p, date, edate, allDay).insertBefore( items[0]);
+
+        }
+        else {
+          rowMaker( p, date, edate, allDay).appendTo( container);
+
+        }
+
+      }
+
+      insertEvt( p, date, edate, allDay, $(key, tab));
+      // console.log( date.format('YYYY-MM-DD'), edate.format('YYYY-MM-DD'));
+      if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
+        for (let i = 1; i < 30; i++) {
+          let _date = date.add(i, 'days');
+          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
+
+          // console.log( _date.format('YYYY-MM-DD'));
+
+          key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"]';
+          insertEvt( p, date, edate, allDay, $(key, tab));
+
+        }
 
       }
 
@@ -433,6 +511,7 @@ $_accordion = strings::rand();  ?>
     else {
       // insert at correct location
       let before = false;
+      let container = $(key, tab);
       $( '> [item]', container).each((i,row) => {
         let _row = $(row);
         let _data = _row.data();
@@ -449,11 +528,11 @@ $_accordion = strings::rand();  ?>
       });
 
       if ( !!before) {
-        row.insertBefore( before);
+        rowMaker( p, date, edate, allDay).insertBefore( before);
 
       }
       else {
-        row.appendTo( container);
+        rowMaker( p, date, edate, allDay).appendTo( container);
 
       }
 
