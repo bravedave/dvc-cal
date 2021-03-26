@@ -157,13 +157,13 @@ $_accordion = strings::rand();  ?>
 
       }
 
-      let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format( 'h:mm a');
+      let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format( 'h:mm');
       let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' + fmtEnd);
-      $('<div class="col-4 col-md-3 col-xl-2 py-1 text-truncate"></div>')
+      $('<div class="col-3 col-xl-2 py-1 text-truncate"></div>')
       .html( timeLabel)
       .appendTo( row);
 
-      $('<div class="col-auto"><i class="bi bi-square-fill"></i></div>').css('color', p.feed.color).appendTo( row);
+      $('<div class="col-auto small pt-1"><i class="bi bi-square-fill"></i></div>').css('color', p.feed.color).appendTo( row);
 
       $('<div class="col"></div>')
       .html( p.event.summary)
