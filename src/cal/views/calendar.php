@@ -153,7 +153,7 @@ $_accordion = strings::rand();  ?>
 
       let fmtStart = 0 == date.minute() ? date.format('h') : date.format( 'h:mm');
       if ( isEvent) {
-        fmtStart = 0 == date.minute() ? date.format('h a') : date.format( 'h:mm a');
+        fmtStart = 0 == date.minute() ? date.format('h a') : date.format( 'h:mm');
 
       }
 
