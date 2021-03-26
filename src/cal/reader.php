@@ -105,13 +105,13 @@ class reader {
 
   static public function readICS( string $path) : self {
     $ical = new ICal( $path, [
-        'defaultSpan'                 => 2,     // Default value
-        'defaultTimeZone'             => 'UTC',
-        'defaultWeekStart'            => 'MO',  // Default value
-        'disableCharacterReplacement' => false, // Default value
-        'filterDaysAfter'             => null,  // Default value
-        'filterDaysBefore'            => null,  // Default value
-        'skipRecurrence'              => false, // Default value
+      'defaultSpan'                 => 2,     // Default value
+      'defaultTimeZone'             => 'UTC',
+      'defaultWeekStart'            => 'MO',  // Default value
+      'disableCharacterReplacement' => false, // Default value
+      'filterDaysAfter'             => null,  // Default value
+      'filterDaysBefore'            => null,  // Default value
+      'skipRecurrence'              => false, // Default value
     ]);
     // $ical->initFile('ICal.ics');
     // $ical->initUrl('https://raw.githubusercontent.com/u01jmg3/ics-parser/master/examples/ICal.ics', $username = null, $password = null, $userAgent = null);
