@@ -23,11 +23,26 @@ $_accordion = strings::rand();  ?>
   <div class="nav nav-tabs" role="tablist" id="<?= $_accordion ?>-tablist">
     <div class="nav-item">
       <div class="input-group">
+        <div class="input-group-append">
+          <button type="button" class="btn input-group-text" id="<?= $_accordion ?>-date-last-monday"><i class="bi bi-chevron-left"></i></button>
+
+        </div>
+
         <input type="date" class="form-control" autofocus id="<?= $_accordion ?>-date"
           value="<?= date( 'Y-m-d') ?>">
 
         <div class="input-group-append">
           <button type="button" class="btn input-group-text" id="<?= $_accordion ?>-date-refresh"><i class="bi bi-arrow-repeat"></i></button>
+
+        </div>
+
+        <div class="input-group-append">
+          <button type="button" class="btn input-group-text" id="<?= $_accordion ?>-date-next-monday"><i class="bi bi-chevron-right"></i></button>
+
+        </div>
+
+        <div class="input-group-append">
+          <button type="button" class="btn input-group-text" id="<?= $_accordion ?>-date-next-monday-week"><i class="bi bi-chevron-double-right"></i></button>
 
         </div>
 
@@ -259,6 +274,7 @@ $_accordion = strings::rand();  ?>
 
   })
   .on( 'show.bs.tab', function(e) {
+    $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').removeClass('d-none');
     $(this).trigger( 'update-tab');
 
   })
@@ -415,6 +431,7 @@ $_accordion = strings::rand();  ?>
 
   })
   .on( 'show.bs.tab', function(e) {
+    $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
     $(this).trigger( 'update-tab');
 
   })
@@ -600,6 +617,7 @@ $_accordion = strings::rand();  ?>
 
   })
   .on( 'show.bs.tab', function(e) {
+    $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
     $(this).trigger( 'update-tab');
 
   })
@@ -627,6 +645,62 @@ $_accordion = strings::rand();  ?>
     $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
 
   })
+
+  $('#<?= $_accordion ?>-date')
+  .on( 'last-monday', function(e) {
+    let _me = $(this);
+    let d = _.dayjs( _me.val());
+    let td = d.subtract( 7 + (d.day()-1), 'day');
+    _me.val( td.format('YYYY-MM-DD'));
+
+    // console.log( d.day(), td.format('llll'));
+
+    $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
+
+  })
+  .on( 'next-monday', function(e) {
+    let _me = $(this);
+    let d = _.dayjs( _me.val());
+    let td = d.add( 7 - (d.day()-1), 'day');
+    _me.val( td.format('YYYY-MM-DD'));
+
+    // console.log( d.day(), td.format('llll'));
+
+    $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
+
+  })
+  .on( 'next-monday-week', function(e) {
+    let _me = $(this);
+    let d = _.dayjs( _me.val());
+    let td = d.add( 14 - (d.day()-1), 'day');
+    _me.val( td.format('YYYY-MM-DD'));
+
+    // console.log( d.day(), td.format('llll'));
+
+    $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
+
+  });
+
+  $('#<?= $_accordion ?>-date-last-monday')
+  .on( 'click', function( e) {
+    e.stopPropagation();
+    $('#<?= $_accordion ?>-date').trigger( 'last-monday');
+
+  });
+
+  $('#<?= $_accordion ?>-date-next-monday')
+  .on( 'click', function( e) {
+    e.stopPropagation();
+    $('#<?= $_accordion ?>-date').trigger( 'next-monday');
+
+  });
+
+  $('#<?= $_accordion ?>-date-next-monday-week')
+  .on( 'click', function( e) {
+    e.stopPropagation();
+    $('#<?= $_accordion ?>-date').trigger( 'next-monday-week');
+
+  });
 
   $(document).on('load-active-feeds', (e) => {
     _.post({
