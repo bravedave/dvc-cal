@@ -24,7 +24,7 @@ $_accordion = strings::rand();  ?>
     <div class="nav-item">
       <div class="input-group">
         <div class="input-group-append">
-          <button type="button" class="btn input-group-text" id="<?= $_accordion ?>-date-last-monday"><i class="bi bi-chevron-left"></i></button>
+          <button type="button" class="btn input-group-text" title="last week" id="<?= $_accordion ?>-date-last-monday"><i class="bi bi-chevron-left"></i></button>
 
         </div>
 
@@ -32,17 +32,17 @@ $_accordion = strings::rand();  ?>
           value="<?= date( 'Y-m-d') ?>">
 
         <div class="input-group-append">
-          <button type="button" class="btn input-group-text" id="<?= $_accordion ?>-date-refresh"><i class="bi bi-arrow-repeat"></i></button>
+          <button type="button" class="btn input-group-text" title="reload" id="<?= $_accordion ?>-date-refresh"><i class="bi bi-arrow-repeat"></i></button>
 
         </div>
 
         <div class="input-group-append">
-          <button type="button" class="btn input-group-text" id="<?= $_accordion ?>-date-next-monday"><i class="bi bi-chevron-right"></i></button>
+          <button type="button" class="btn input-group-text" title="next week" id="<?= $_accordion ?>-date-next-monday"><i class="bi bi-chevron-right"></i></button>
 
         </div>
 
         <div class="input-group-append">
-          <button type="button" class="btn input-group-text" id="<?= $_accordion ?>-date-next-monday-week"><i class="bi bi-chevron-double-right"></i></button>
+          <button type="button" class="btn input-group-text" title="in two weeks" id="<?= $_accordion ?>-date-next-monday-week"><i class="bi bi-chevron-double-right"></i></button>
 
         </div>
 
@@ -74,13 +74,22 @@ $_accordion = strings::rand();  ?>
 </div>
 <script>
 ( _ => {
-  $('#<?= $_accordion ?>-date').on( 'keypress', e => {
+  $('#<?= $_accordion ?>-date')
+  .on( 'keypress', e => {
     if ( 13 == e.keyCode) {
       $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
 
     }
 
-  })
+  });
+
+  if ( _.browser.isIPhone) {
+    $('#<?= $_accordion ?>-date').on( 'change', e => {
+      $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
+
+    });
+
+  }
 
   let getFeed = (feed, tab) => {
     return new Promise( resolve => {
@@ -258,10 +267,16 @@ $_accordion = strings::rand();  ?>
       let feeds = $(document).data('active_feeds');
       let i = 0;
 
+      $('.bi', '#<?= $_accordion ?>-date-refresh').addClass( 'bi-spin');
+
       let getNextFeed = () => {
         if ( feeds.length > i) {
           getFeed( feeds[i++], _me)
           .then( getNextFeed);
+
+        }
+        else {
+          $('.bi', '#<?= $_accordion ?>-date-refresh').removeClass( 'bi-spin');
 
         }
 
@@ -413,12 +428,18 @@ $_accordion = strings::rand();  ?>
       })
       .appendTo( $('[ctrl-box]', tab))
 
+      $('.bi', '#<?= $_accordion ?>-date-refresh').addClass( 'bi-spin');
+
       let feeds = $(document).data('active_feeds');
       let i = 0;
       let getNextFeed = () => {
         if ( feeds.length > i) {
           getFeed( feeds[i++], _me)
           .then( getNextFeed);
+
+        }
+        else {
+          $('.bi', '#<?= $_accordion ?>-date-refresh').removeClass( 'bi-spin');
 
         }
 
@@ -599,12 +620,18 @@ $_accordion = strings::rand();  ?>
 
       });
 
+      $('.bi', '#<?= $_accordion ?>-date-refresh').addClass( 'bi-spin');
+
       let feeds = $(document).data('active_feeds');
       let i = 0;
       let getNextFeed = () => {
         if ( feeds.length > i) {
           getFeed( feeds[i++], _me)
           .then( getNextFeed);
+
+        }
+        else {
+          $('.bi', '#<?= $_accordion ?>-date-refresh').removeClass( 'bi-spin');
 
         }
 
@@ -650,8 +677,15 @@ $_accordion = strings::rand();  ?>
   .on( 'last-monday', function(e) {
     let _me = $(this);
     let d = _.dayjs( _me.val());
-    let td = d.subtract( 7 + (d.day()-1), 'day');
-    _me.val( td.format('YYYY-MM-DD'));
+
+    if ( 1 == d.day()) {
+      _me.val( d.subtract( 7, 'day').format('YYYY-MM-DD'));
+
+    }
+    else {
+      _me.val( d.subtract( d.day()-1, 'day').format('YYYY-MM-DD'));
+
+    }
 
     // console.log( d.day(), td.format('llll'));
 
