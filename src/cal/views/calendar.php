@@ -84,7 +84,8 @@ $_accordion = strings::rand();  ?>
   });
 
   if ( _.browser.isIPhone) {
-    $('#<?= $_accordion ?>-date').on( 'change', e => {
+    $('#<?= $_accordion ?>-date').on( 'change', function(e) => {
+      this.blur();
       $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
 
     });
