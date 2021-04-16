@@ -191,7 +191,7 @@ $_accordion = strings::rand();  ?>
       $('<div class="col-auto small pt-1"><i class="bi bi-square-fill"></i></div>').css('color', p.feed.color).appendTo( row);
 
       $('<div class="col"></div>')
-      .html( String( p.event.summary).replace(/loc:/, '<i class="bi bi-geo"></i>'))
+      .html( String( p.event.summary).replace(/- loc:/, '<i class="bi bi-geo-fill text-muted"></i>'))
       .appendTo( row);
 
       return row;
