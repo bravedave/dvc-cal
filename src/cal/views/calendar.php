@@ -303,6 +303,7 @@ $_accordion = strings::rand();  ?>
 
   })
   .on( 'show.bs.tab', function(e) {
+    console.log( 'show');
     $('#<?= $_accordion ?>-nav').addClass('d-none');
     $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
     $(this).trigger( 'update-tab');
