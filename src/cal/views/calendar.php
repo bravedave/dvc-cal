@@ -312,9 +312,10 @@ $_accordion = strings::rand();  ?>
     let rowMaker = (p, date, edate, allDay) => {
       let row = $('<div class="form-row pointer-calendar border" item></div>');
 
+      // .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
+      // .css( 'background-color', p.feed.color)
       row
-      .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
-      .css( 'background-color', p.feed.color)
+      .css( 'border-left', '2px solid ' + p.feed.color)
       .data('data', p)
       .data('time', date.format('YYYY-MM-DD hh:mm'))
       .data('unix', date.unix())
@@ -472,10 +473,11 @@ $_accordion = strings::rand();  ?>
 
     let rowMaker = (p, date, edate, allDay) => {
       let row = $('<div class="form-row border" item></div>');
+      // .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
+      // .css( 'background-color', p.feed.color)
       row
       .addClass('pointer-calendar')
-      .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
-      .css( 'background-color', p.feed.color)
+      .css( 'border-left', '2px solid ' + p.feed.color)
       .data('data', p)
       .data('time', date.format('YYYY-MM-DD hh:mm'))
       .data('unix', date.unix())
