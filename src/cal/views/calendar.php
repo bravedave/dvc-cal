@@ -128,6 +128,7 @@ $_accordion = strings::rand();  ?>
 
         // console.table( data);
 
+        console.log( feed.url);
         _.post({
           url : feed.url,
           data : data,
@@ -276,7 +277,6 @@ $_accordion = strings::rand();  ?>
     let tab = $('#<?= $_accordion ?>-widget-tab');
     let date = _.dayjs($('#<?= $_accordion ?>-date').val());
     let url = '<?= $this->route ?>/widget_guts?seed=' + date.format( 'YYYY-MM-DD');
-    return;
 
     tab.load( url, html => {
       let feeds = $(document).data('active_feeds');
@@ -303,7 +303,6 @@ $_accordion = strings::rand();  ?>
 
   })
   .on( 'show.bs.tab', function(e) {
-    console.log( 'show');
     $('#<?= $_accordion ?>-nav').addClass('d-none');
     $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
     $(this).trigger( 'update-tab');
