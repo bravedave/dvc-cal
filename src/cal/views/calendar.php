@@ -275,7 +275,7 @@ $_accordion = strings::rand();  ?>
     let _me = $(this);
     let tab = $('#<?= $_accordion ?>-widget-tab');
     let date = _.dayjs($('#<?= $_accordion ?>-date').val());
-    let url = '<?= $this->route ?>/widgetGuts?seed=' + date.format( 'YYYY-MM-DD');
+    let url = '<?= $this->route ?>/widget_guts?seed=' + date.format( 'YYYY-MM-DD');
 
     tab.load( url, html => {
       let feeds = $(document).data('active_feeds');
@@ -385,8 +385,6 @@ $_accordion = strings::rand();  ?>
     let tab = $('#<?= $_accordion ?>-agenda-tab');
     let date = _.dayjs($('#<?= $_accordion ?>-date').val());
     let url = '<?= $this->route ?>/agenda?seed=' + date.format( 'YYYY-MM-DD');
-
-    console.log( url);
 
     tab.load( url, html => {
       let feeds = $(document).data('active_feeds');

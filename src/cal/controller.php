@@ -244,7 +244,7 @@ class controller extends \Controller {
 
   }
 
-  public function widgetGuts() {
+  public function widget_guts() {
     $seed = $this->getParam( 'seed');
     if ( strtotime( $seed) < 1) {
       $seed = date( 'Y-m-d');
