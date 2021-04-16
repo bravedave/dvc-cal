@@ -799,6 +799,7 @@ $_accordion = strings::rand();  ?>
           printf( '$(\'#%s-agenda\').tab(\'show\')', $_accordion);
 
         } ?>;
+        console.log( 'update-active-tab');
 
     }
 
