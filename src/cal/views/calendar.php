@@ -790,6 +790,7 @@ $_accordion = strings::rand();  ?>
 
     }
     else {
+      console.log( 'update-active-tab');
       <?php
         if ( isset( $this->data->mode) && 'widget' == $this->data->mode) {
           printf( '$(\'#%s-widget\').tab(\'show\')', $_accordion);
@@ -799,7 +800,6 @@ $_accordion = strings::rand();  ?>
           printf( '$(\'#%s-agenda\').tab(\'show\')', $_accordion);
 
         } ?>;
-        console.log( 'update-active-tab');
 
     }
 
@@ -885,6 +885,7 @@ $_accordion = strings::rand();  ?>
     }).then( d => {
       if ( 'ack' == d.response) {
         $(document).data('active_feeds', d.data);
+        console.log( 'load-active-feeds');
         $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
 
       }
