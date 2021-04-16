@@ -128,7 +128,7 @@ $_accordion = strings::rand();  ?>
 
         // console.table( data);
 
-        console.log( feed.name, feed.url);
+        // console.log( feed.name, feed.url);
         _.post({
           url : feed.url,
           data : data,
@@ -789,7 +789,7 @@ $_accordion = strings::rand();  ?>
 
     }
     else {
-      console.log( 'update-active-tab');
+      // console.log( 'update-active-tab');
       <?php
         if ( isset( $this->data->mode) && 'widget' == $this->data->mode) {
           printf( '$(\'#%s-widget\').tab(\'show\')', $_accordion);
@@ -884,7 +884,7 @@ $_accordion = strings::rand();  ?>
     }).then( d => {
       if ( 'ack' == d.response) {
         $(document).data('active_feeds', d.data);
-        console.log( 'load-active-feeds');
+        // console.log( 'load-active-feeds');
         $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab');
 
       }
@@ -900,7 +900,7 @@ $_accordion = strings::rand();  ?>
   $(document).on( 'calendar-refresh', e => $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab'));
   $(document).ready( () => $(document).trigger('load-active-feeds'));
 
-  console.log( 'done ..');
+  // console.log( 'done ..');
 
 }) (_brayworth_);
 </script>
