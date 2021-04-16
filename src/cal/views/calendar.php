@@ -128,7 +128,7 @@ $_accordion = strings::rand();  ?>
 
         // console.table( data);
 
-        console.log( feed.url);
+        console.log( feed.name, feed.url);
         _.post({
           url : feed.url,
           data : data,
