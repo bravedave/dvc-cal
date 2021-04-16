@@ -901,5 +901,7 @@ $_accordion = strings::rand();  ?>
   $(document).on( 'calendar-refresh', e => $('#<?= $_accordion ?>-tablist').trigger( 'update-active-tab'));
   $(document).ready( () => $(document).trigger('load-active-feeds'));
 
+  console.log( 'done ..');
+
 }) (_brayworth_);
 </script>
