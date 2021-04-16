@@ -204,7 +204,7 @@ $_accordion = strings::rand();  ?>
 
   $('#<?= $_accordion ?>-widget')
   .on( 'event-add', function(e, p) {
-    console.log( p);
+    // console.log( p);
 
     let tab = $('#<?= $_accordion ?>-widget-tab');
     let date = _.dayjs( p.event.start);
