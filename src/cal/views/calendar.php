@@ -315,7 +315,7 @@ $_accordion = strings::rand();  ?>
       // .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
       // .css( 'background-color', p.feed.color)
       row
-      .attr( 'style', 'border-left-color: ' + p.feed.color + '!important')
+      .attr( 'style', 'border-left: 3px solid ' + p.feed.color + '!important')
       .data('data', p)
       .data('time', date.format('YYYY-MM-DD hh:mm'))
       .data('unix', date.unix())
@@ -477,7 +477,7 @@ $_accordion = strings::rand();  ?>
       // .css( 'background-color', p.feed.color)
       row
       .addClass('pointer-calendar')
-      .attr( 'style', 'border-left-color: ' + p.feed.color + '!important')
+      .attr( 'style', 'border-left: 3px solid ' + p.feed.color + '!important')
       .data('data', p)
       .data('time', date.format('YYYY-MM-DD hh:mm'))
       .data('unix', date.unix())
