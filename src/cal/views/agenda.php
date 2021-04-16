@@ -19,7 +19,7 @@ $seed = new DateTime( $this->data->seed);
 
 $haveCalendar = (bool)currentUser::getCalendarCredentials();
 
-for ($i=0; $i < 7; $i++) {
+for ($i=0; $i < $this->data->days; $i++) {
   if ( $i > 0) $seed->add( new DateInterval('P1D'));  ?>
   <div data-date="<?= $seed->format( 'Y-m-d') ?>">
     <div class="form-row mb-1">

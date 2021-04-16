@@ -220,7 +220,40 @@ class controller extends \Controller {
     }
 
     $this->data = (object)[
-      'seed' => $seed
+      'seed' => $seed,
+      'days' => 7
+
+    ];
+
+    $this->load( 'agenda');
+
+  }
+
+  public function widget() {
+    $start = date( 'Y-m-d');
+    $end = date( 'Y-m-d');
+    $this->data = (object)[
+      'start' => $start,
+      'end' => $end,
+      'feed' => [],
+      'mode' => 'widget'
+
+    ];
+
+    $this->load('calendar');
+
+  }
+
+  public function widgetGuts() {
+    $seed = $this->getParam( 'seed');
+    if ( strtotime( $seed) < 1) {
+      $seed = date( 'Y-m-d');
+
+    }
+
+    $this->data = (object)[
+      'seed' => $seed,
+      'days' => 1
 
     ];
 

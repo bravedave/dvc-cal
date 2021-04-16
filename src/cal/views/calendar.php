@@ -19,7 +19,7 @@ $_accordion = strings::rand();  ?>
   #<?= $_accordion ?>-date { -webkit-appearance: none; }
 }
 </style>
-<nav class="d-print-none">
+<nav class="d-print-none d-none" id="<?= $_accordion ?>-nav">
   <div class="nav nav-tabs" role="tablist" id="<?= $_accordion ?>-tablist">
     <div class="nav-item">
       <div class="input-group">
@@ -29,7 +29,7 @@ $_accordion = strings::rand();  ?>
         </div>
 
         <input type="date" class="form-control" autofocus id="<?= $_accordion ?>-date"
-          value="<?= date( 'Y-m-d') ?>">
+          value="<?= $this->data->start ?>">
 
         <div class="input-group-append">
           <button type="button" class="btn input-group-text" title="reload" id="<?= $_accordion ?>-date-refresh"><i class="bi bi-arrow-repeat"></i></button>
@@ -50,7 +50,7 @@ $_accordion = strings::rand();  ?>
 
     </div>
 
-    <a class="nav-link d-none d-lg-block small ml-auto" data-toggle="tab" data-format="agenda" href="#<?= $_accordion ?>-agenda-tab" id="<?= $_accordion ?>-agenda" aria-selected="true" aria-controls="<?= $_accordion ?>-agenda-tab">
+    <a class="nav-link d-none d-lg-block small ml-auto" data-toggle="tab" data-format="agenda" href="#<?= $_accordion ?>-agenda-tab" id="<?= $_accordion ?>-agenda" aria-selected="false" aria-controls="<?= $_accordion ?>-agenda-tab">
       Agenda
     </a>
 
@@ -62,6 +62,10 @@ $_accordion = strings::rand();  ?>
       Month
     </a>
 
+    <a class="nav-link d-none small" data-toggle="tab" data-format="widget" href="#<?= $_accordion ?>-widget-tab" id="<?= $_accordion ?>-widget" aria-selected="false" aria-controls="<?= $_accordion ?>-widget-tab">
+      Widget
+    </a>
+
   </div>
 
 </nav>
@@ -70,6 +74,7 @@ $_accordion = strings::rand();  ?>
   <div id="<?= $_accordion ?>-agenda-tab" class="tab-pane fade" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-agenda"></div>
   <div id="<?= $_accordion ?>-week-tab" class="tab-pane fade small" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-week"></div>
   <div id="<?= $_accordion ?>-month-tab" class="tab-pane fade small" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-month"></div>
+  <div id="<?= $_accordion ?>-widget-tab" class="tab-pane fade" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-widget"></div>
 
 </div>
 <script>
@@ -109,8 +114,11 @@ $_accordion = strings::rand();  ?>
           edate = date.add('1', 'month').day(0);
 
         }
+        else if ( 'widget' == _data.format) {
+          date = date;
+          edate = date.add('1', 'days');
 
-        // console.log( tab[0]);
+        }
 
         let data = !!feed.data ? JSON.parse( feed.data) : {};
         data.action = 'get-feed';
@@ -126,6 +134,7 @@ $_accordion = strings::rand();  ?>
 
         }).then( d => {
           if ( 'ack' == d.response) {
+            // console.log( d.data);
             $.each( d.data, ( i, event) => tab.trigger( 'event-add', { event : event, feed : feed }));
 
           }
@@ -140,74 +149,78 @@ $_accordion = strings::rand();  ?>
 
   };
 
-  $('#<?= $_accordion ?>-agenda')
+  let agendaRowMaker = (p, date, edate, allDay) => {
+
+    let row = $('<div class="form-row border pointer-calendar" item></div>');
+    row
+    .data('data', p)
+    .data('time', date.format('YYYY-MM-DD hh:mm'))
+    .data('unix', date.unix())
+    .data('allday', allDay ? 'yes' : 'no')
+    .on( 'click', function( e) {
+      e.stopPropagation();e.preventDefault();
+      let _me = $(this);
+      let _data = _me.data();
+      _data.originalEvent = e;
+      $(document).trigger( 'calendar-event-click', _data);
+
+    })
+    .on( 'contextmenu', function( e) {
+      if ( e.shiftKey)
+        return;
+
+      e.stopPropagation();e.preventDefault();
+      let _me = $(this);
+      let _data = _me.data();
+      _data.originalEvent = e;
+      $(document).trigger( 'calendar-event-context', _data);
+
+    });
+
+    let fmtStart = 0 == date.minute() ? date.format('h') : date.format( 'h:mm');
+    let isEvent = date.unix() == edate.unix();
+    if ( isEvent) {
+      fmtStart = 0 == date.minute() ? date.format('h a') : date.format( 'h:mm');
+
+    }
+
+    let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format( 'h:mm');
+    let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' + fmtEnd);
+    $('<div class="col-3 col-xl-2 py-1 text-truncate"></div>')
+    .html( timeLabel)
+    .appendTo( row);
+
+    $('<div class="col-auto small pt-1"><i class="bi bi-square-fill"></i></div>').css('color', p.feed.color).appendTo( row);
+
+    $('<div class="col"></div>')
+    .html( String( p.event.summary).replace(/loc:/, '<i class="bi bi-geo-alt-fill small text-muted"></i>'))
+    .appendTo( row);
+
+    return row;
+
+  };
+
+  window.goWidgit = e => $('#<?= $_accordion ?>-widget').tab('show');
+
+  $('#<?= $_accordion ?>-widget')
   .on( 'event-add', function(e, p) {
-    let tab = $('#<?= $_accordion ?>-agenda-tab');
+    console.log( p);
+
+    let tab = $('#<?= $_accordion ?>-widget-tab');
     let date = _.dayjs( p.event.start);
     let edate = _.dayjs( p.event.end);
     let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format( 'YYYYMMDD');
-    let isEvent = date.unix() == edate.unix();
-
-    let rowMaker = (p, date, edate, allDay) => {
-
-      let row = $('<div class="form-row border pointer-calendar" item></div>');
-      row
-      .data('data', p)
-      .data('time', date.format('YYYY-MM-DD hh:mm'))
-      .data('unix', date.unix())
-      .data('allday', allDay ? 'yes' : 'no')
-      .on( 'click', function( e) {
-        e.stopPropagation();e.preventDefault();
-        let _me = $(this);
-        let _data = _me.data();
-        _data.originalEvent = e;
-        $(document).trigger( 'calendar-event-click', _data);
-
-      })
-      .on( 'contextmenu', function( e) {
-        if ( e.shiftKey)
-          return;
-
-        e.stopPropagation();e.preventDefault();
-        let _me = $(this);
-        let _data = _me.data();
-        _data.originalEvent = e;
-        $(document).trigger( 'calendar-event-context', _data);
-
-      });
-
-      let fmtStart = 0 == date.minute() ? date.format('h') : date.format( 'h:mm');
-      if ( isEvent) {
-        fmtStart = 0 == date.minute() ? date.format('h a') : date.format( 'h:mm');
-
-      }
-
-      let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format( 'h:mm');
-      let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' + fmtEnd);
-      $('<div class="col-3 col-xl-2 py-1 text-truncate"></div>')
-      .html( timeLabel)
-      .appendTo( row);
-
-      $('<div class="col-auto small pt-1"><i class="bi bi-square-fill"></i></div>').css('color', p.feed.color).appendTo( row);
-
-      $('<div class="col"></div>')
-      .html( String( p.event.summary).replace(/loc:/, '<i class="bi bi-geo-alt-fill small text-muted"></i>'))
-      .appendTo( row);
-
-      return row;
-
-    };
 
     let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
     if ( allDay) {
       let insertEvt = (p, date, edate, allDay, container) => {
         let items = $( '> [item]', container);
         if ( items.length > 0) {
-          rowMaker(p, date, edate, allDay).insertBefore( items[0]);
+          agendaRowMaker(p, date, edate, allDay).insertBefore( items[0]);
 
         }
         else {
-          rowMaker(p, date, edate, allDay).appendTo( container);
+          agendaRowMaker(p, date, edate, allDay).appendTo( container);
 
         }
 
@@ -247,11 +260,120 @@ $_accordion = strings::rand();  ?>
       });
 
       if ( !!before) {
-        rowMaker(p, date, edate, allDay).insertBefore( before);
+        agendaRowMaker(p, date, edate, allDay).insertBefore( before);
 
       }
       else {
-        rowMaker(p, date, edate, allDay).appendTo( container);
+        agendaRowMaker(p, date, edate, allDay).appendTo( container);
+
+      }
+
+    }
+
+  })
+  .on( 'update-tab', function(e) {
+    let _me = $(this);
+    let tab = $('#<?= $_accordion ?>-widget-tab');
+    let date = _.dayjs($('#<?= $_accordion ?>-date').val());
+    let url = '<?= $this->route ?>/widgetGuts?seed=' + date.format( 'YYYY-MM-DD');
+
+    tab.load( url, html => {
+      let feeds = $(document).data('active_feeds');
+      let i = 0;
+
+      $('.bi', '#<?= $_accordion ?>-date-refresh').addClass( 'bi-spin');
+
+      let getNextFeed = () => {
+        if ( feeds.length > i) {
+          getFeed( feeds[i++], _me)
+          .then( getNextFeed);
+
+        }
+        else {
+          $('.bi', '#<?= $_accordion ?>-date-refresh').removeClass( 'bi-spin');
+
+        }
+
+      };
+
+      getNextFeed();
+
+    });
+
+  })
+  .on( 'show.bs.tab', function(e) {
+    $('#<?= $_accordion ?>-nav').addClass('d-none');
+    $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
+    $(this).trigger( 'update-tab');
+
+  })
+  .on( 'hidden.bs.tab', function(e) {
+    let tab = $('#<?= $_accordion ?>-widget-tab');
+    tab.html('');
+
+  });
+
+  $('#<?= $_accordion ?>-agenda')
+  .on( 'event-add', function(e, p) {
+    let tab = $('#<?= $_accordion ?>-agenda-tab');
+    let date = _.dayjs( p.event.start);
+    let edate = _.dayjs( p.event.end);
+    let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format( 'YYYYMMDD');
+
+    let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
+    if ( allDay) {
+      let insertEvt = (p, date, edate, allDay, container) => {
+        let items = $( '> [item]', container);
+        if ( items.length > 0) {
+          agendaRowMaker(p, date, edate, allDay).insertBefore( items[0]);
+
+        }
+        else {
+          agendaRowMaker(p, date, edate, allDay).appendTo( container);
+
+        }
+
+      }
+
+      insertEvt( p, date, edate, allDay, $(key, tab));
+      if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
+        for (let i = 1; i < 30; i++) {
+          let _date = date.add(i, 'days');
+          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
+
+          key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"]';
+          insertEvt( p, date, edate, allDay, $(key, tab));
+
+        }
+
+      }
+
+    }
+    else {
+      // insert at correct location
+      let before = false;
+      let container = $(key, tab);
+      $( '> [item]', container).each((i,row) => {
+        let _row = $(row);
+        let _data = _row.data();
+
+        if ( 'yes' != _data.allDay) {
+          if ( date.unix() < _data.unix) {
+            before = row;
+            return false; // jQuery break
+
+          }
+
+        }
+
+      });
+
+      if ( !!before) {
+        agendaRowMaker(p, date, edate, allDay).insertBefore( before);
+
+      }
+      else {
+        agendaRowMaker(p, date, edate, allDay).appendTo( container);
 
       }
 
@@ -283,13 +405,13 @@ $_accordion = strings::rand();  ?>
 
       };
 
-      // console.table( 'update-tab-agenda');
       getNextFeed();
 
     });
 
   })
   .on( 'show.bs.tab', function(e) {
+    $('#<?= $_accordion ?>-nav').removeClass('d-none');
     $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').removeClass('d-none');
     $(this).trigger( 'update-tab');
 
@@ -454,6 +576,7 @@ $_accordion = strings::rand();  ?>
 
   })
   .on( 'show.bs.tab', function(e) {
+    $('#<?= $_accordion ?>-nav').removeClass('d-none');
     $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
     $(this).trigger( 'update-tab');
 
@@ -647,6 +770,7 @@ $_accordion = strings::rand();  ?>
 
   })
   .on( 'show.bs.tab', function(e) {
+    $('#<?= $_accordion ?>-nav').removeClass('d-none');
     $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
     $(this).trigger( 'update-tab');
 
@@ -664,7 +788,15 @@ $_accordion = strings::rand();  ?>
 
     }
     else {
-      $('#<?= $_accordion ?>-agenda').tab('show');
+      <?php
+        if ( isset( $this->data->mode) && 'widget' == $this->data->mode) {
+          printf( '$(\'#%s-widget\').tab(\'show\')', $_accordion);
+
+        }
+        else {
+          printf( '$(\'#%s-agenda\').tab(\'show\')', $_accordion);
+
+        } ?>;
 
     }
 

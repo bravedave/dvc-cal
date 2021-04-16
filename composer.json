@@ -1,37 +1,35 @@
 {
-    "name": "bravedave/dvc-cal",
-    "description": "DVC Calendar Module",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Dave Bray",
-            "email": "david@brayworth.com.au"
-        }
-    ],
-    "repositories": [
-        { "type": "git", "url": "https://github.com/bravedave/dvc" }
-    ],
-    "require": {
-        "johngrogg/ics-parser": "*",
-        "bravedave/dvc": "*",
-        "parsecsv/php-parsecsv": "^1.2",
-        "sabre/dav": "^4.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "dvc\\cal\\": "src/cal/"
-
-        }
-
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "": "src/application/app/"
-
-        }
-
+  "name": "bravedave/dvc-cal",
+  "description": "DVC Calendar Module",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dave Bray",
+      "email": "david@brayworth.com.au"
     }
-
+  ],
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/bravedave/dvc"
+    }
+  ],
+  "require": {
+    "johngrogg/ics-parser": "*",
+    "bravedave/dvc": "*",
+    "parsecsv/php-parsecsv": "^1.2",
+    "sabre/dav": "^4.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "dvc\\cal\\": "src/cal/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "": "src/application/app/"
+    }
+  }
 }
