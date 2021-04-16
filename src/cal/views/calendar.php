@@ -386,6 +386,8 @@ $_accordion = strings::rand();  ?>
     let date = _.dayjs($('#<?= $_accordion ?>-date').val());
     let url = '<?= $this->route ?>/agenda?seed=' + date.format( 'YYYY-MM-DD');
 
+    console.log( url);
+
     tab.load( url, html => {
       let feeds = $(document).data('active_feeds');
       let i = 0;
