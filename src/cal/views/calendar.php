@@ -201,7 +201,7 @@ $_accordion = strings::rand();  ?>
 
   };
 
-  window.goWidgit = e => $('#<?= $_accordion ?>-widget').tab('show');
+  // window.goWidgit = e => $('#<?= $_accordion ?>-widget').tab('show');
 
   $('#<?= $_accordion ?>-widget')
   .on( 'event-add', function(e, p) {
