@@ -464,6 +464,7 @@ $_accordion = strings::rand();  ?>
       });
 
       $('<div class="col py-1 text-truncate"></div>')
+      .attr( 'title', p.event.summary)
       .html( p.event.summary)
       .appendTo( row);
 
@@ -634,6 +635,7 @@ $_accordion = strings::rand();  ?>
       }
 
       $('<div class="col py-1 text-truncate"></div>')
+      .attr( 'title', p.event.summary)
       .html( p.event.summary)
       .appendTo( row);
 
