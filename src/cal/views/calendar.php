@@ -659,7 +659,7 @@ $_accordion = strings::rand();  ?>
       }
 
       insertEvt( p, date, edate, allDay, $(key, tab));
-      // console.log( date.format('YYYY-MM-DD'), edate.format('YYYY-MM-DD'));
+      console.log( date.format('YYYY-MM-DD'), edate.format('YYYY-MM-DD'));
       if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
         for (let i = 1; i < 30; i++) {
           let _date = date.add(i, 'days');
