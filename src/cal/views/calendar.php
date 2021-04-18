@@ -340,7 +340,8 @@ $_accordion = strings::rand();  ?>
       if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
         for (let i = 1; i < 30; i++) {
           let _date = date.add(i, 'days');
-          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
+          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD') && '0000' == edate.format( 'HHmm')) break;
+          if ( _date.format('YYYYMMDDHHmm') > edate.format( 'YYYYMMDDHHmm')) break;
 
           key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"]';
           insertEvt( p, date, edate, allDay, $(key, tab));
@@ -481,7 +482,8 @@ $_accordion = strings::rand();  ?>
       if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
         for (let i = 1; i < 30; i++) {
           let _date = date.add(i, 'days');
-          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
+          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD') && '0000' == edate.format( 'HHmm')) break;
+          if ( _date.format('YYYYMMDDHHmm') > edate.format( 'YYYYMMDDHHmm')) break;
 
           // console.log( _date.format('YYYY-MM-DD'));
           key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"][data-slot="day"]';
@@ -663,6 +665,7 @@ $_accordion = strings::rand();  ?>
       if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
         for (let i = 1; i < 30; i++) {
           let _date = date.add(i, 'days');
+          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD') && '0000' == edate.format( 'HHmm')) break;
           if ( _date.format('YYYYMMDDHHmm') > edate.format( 'YYYYMMDDHHmm')) break;
 
           // console.log( _date.format('YYYY-MM-DD'));
