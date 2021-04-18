@@ -660,15 +660,10 @@ $_accordion = strings::rand();  ?>
 
       insertEvt( p, date, edate, allDay, $(key, tab));
       // console.log( date.format('YYYY-MM-DD'), edate.format('YYYY-MM-DD HH:mm:ss'));
-      if (
-        date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')
-        ||
-        ( date.format('YYYYMMDD') == edate.format( 'YYYYMMDD') && '23:59' == edate.format('HH:mm'))
-
-      ) {
+      if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
         for (let i = 1; i < 30; i++) {
           let _date = date.add(i, 'days');
-          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
+          if ( _date.format('YYYYMMDDHHmm') > edate.format( 'YYYYMMDDHHmm')) break;
 
           // console.log( _date.format('YYYY-MM-DD'));
 
