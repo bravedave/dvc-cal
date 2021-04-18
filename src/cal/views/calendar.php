@@ -665,7 +665,7 @@ $_accordion = strings::rand();  ?>
           let _date = date.add(i, 'days');
           if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
 
-          // console.log( _date.format('YYYY-MM-DD'));
+          console.log( _date.format('YYYY-MM-DD'));
 
           key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"]';
           insertEvt( p, date, edate, allDay, $(key, tab));
