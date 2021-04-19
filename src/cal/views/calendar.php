@@ -338,7 +338,7 @@ $_accordion = strings::rand();  ?>
 
       insertEvt( p, date, edate, allDay, $(key, tab));
       if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
-        console.log( date.format('YYYY-MM-DD HH:mm'), edate.format('YYYY-MM-DD HH:mm'));
+        // console.log( date.format('YYYY-MM-DD HH:mm'), edate.format('YYYY-MM-DD HH:mm'));
         for (let i = 1; i < 30; i++) {
           let _date = date.add(i, 'days');
           if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD') && '0000' == edate.format( 'HHmm')) break;
