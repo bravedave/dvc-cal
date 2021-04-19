@@ -338,6 +338,7 @@ $_accordion = strings::rand();  ?>
 
       insertEvt( p, date, edate, allDay, $(key, tab));
       if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
+        console.log( date.format('YYYY-MM-DD HH:mm'), edate.format('YYYY-MM-DD HH:mm'));
         for (let i = 1; i < 30; i++) {
           let _date = date.add(i, 'days');
           if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD') && '0000' == edate.format( 'HHmm')) break;
@@ -436,8 +437,6 @@ $_accordion = strings::rand();  ?>
     let rowMaker = (p, date, edate, allDay) => {
       let row = $('<div class="form-row pointer-calendar border" item></div>');
 
-      // .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
-      // .css( 'background-color', p.feed.color)
       row
       .attr( 'style', 'border-left: 3px solid ' + p.feed.color + '!important')
       .data('data', p)
