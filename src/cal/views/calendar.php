@@ -111,7 +111,7 @@ $_accordion = strings::rand();  ?>
         }
         else if ( 'month' == _data.format) {
           date = date.date(1);
-          edate = date.add('1', 'month').day(0);
+          edate = date.add('1', 'month').date(0);
 
         }
         else if ( 'widget' == _data.format) {
@@ -231,7 +231,8 @@ $_accordion = strings::rand();  ?>
       if ( date.format('YYYYMMDD') != edate.format( 'YYYYMMDD')) {
         for (let i = 1; i < 30; i++) {
           let _date = date.add(i, 'days');
-          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD')) break;
+          if ( _date.format('YYYYMMDD') == edate.format( 'YYYYMMDD') && '0000' == edate.format( 'HHmm')) break;
+          if ( _date.format('YYYYMMDDHHmm') > edate.format( 'YYYYMMDDHHmm')) break;
 
           key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"]';
           insertEvt( p, date, edate, allDay, $(key, tab));
