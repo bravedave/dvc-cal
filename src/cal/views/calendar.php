@@ -317,6 +317,8 @@ $_accordion = strings::rand();  ?>
 
   $('#<?= $_accordion ?>-agenda')
   .on( 'event-add', function(e, p) {
+    // console.log( p);
+
     let tab = $('#<?= $_accordion ?>-agenda-tab');
     let date = _.dayjs( p.event.start);
     let edate = _.dayjs( p.event.end);
