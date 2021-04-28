@@ -62,9 +62,11 @@ class appointment {
 
       }
 
+      return calendar::CreateAppointment( $app, $creds);
+
     }
 
-    return calendar::CreateAppointment( $app, $creds);
+    return false;
 
   }
 
