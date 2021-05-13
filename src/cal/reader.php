@@ -201,6 +201,7 @@ class reader {
     if ( $start || $end || $filter) {
       $a = [];
       foreach ( $this->_feed as $event) {
+
         $es = date( 'Y-m-d', strtotime( $event['start']));
         if ( !$start || $es >= $start) {
           if ( !$end || $es <= $end) {
@@ -212,6 +213,19 @@ class reader {
 
             }
             else {
+              $a[] = $event;
+
+            }
+
+          }
+
+        }
+        elseif ( $end) {
+          // start is true ..
+          $ese = date( 'Y-m-d', strtotime( $event['end']));
+          if ( $es <= $end && $ese >= $start) {
+            // it's in progress
+            if ( !$filter || $filter( $event)) {
               $a[] = $event;
 
             }
