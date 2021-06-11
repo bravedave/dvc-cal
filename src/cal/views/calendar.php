@@ -281,24 +281,27 @@ $_accordion = strings::rand();  ?>
 
     tab.load( url, html => {
       let feeds = $(document).data('active_feeds');
-      let i = 0;
+      if ( !!feeds) {
+        let i = 0;
 
-      $('.bi', '#<?= $_accordion ?>-date-refresh').addClass( 'bi-spin');
+        $('.bi', '#<?= $_accordion ?>-date-refresh').addClass( 'bi-spin');
 
-      let getNextFeed = () => {
-        if ( feeds.length > i) {
-          getFeed( feeds[i++], _me)
-          .then( getNextFeed);
+        let getNextFeed = () => {
+          if ( feeds.length > i) {
+            getFeed( feeds[i++], _me)
+            .then( getNextFeed);
 
-        }
-        else {
-          $('.bi', '#<?= $_accordion ?>-date-refresh').removeClass( 'bi-spin');
+          }
+          else {
+            $('.bi', '#<?= $_accordion ?>-date-refresh').removeClass( 'bi-spin');
 
-        }
+          }
 
-      };
+        };
 
-      getNextFeed();
+        getNextFeed();
+
+      }
 
     });
 
