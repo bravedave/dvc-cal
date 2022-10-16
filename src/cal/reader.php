@@ -166,7 +166,7 @@ class reader {
         'end' => $end->format('Y-m-d H:i'),
         'startUTC' => $start->format('c'),
         'endUTC' => $end->format('c'),
-        'location' => $event->location,,
+        'location' => $event->location,
         'url' => $event->url ?? '',
         'description' => $event->notes,
         'id' => $event->id
