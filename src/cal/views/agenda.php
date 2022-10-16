@@ -15,24 +15,27 @@ use DateTime;
 use DateInterval;
 use strings;
 
-$seed = new DateTime( $this->data->seed);
+$seed = new DateTime($this->data->seed);
 
 $haveCalendar = (bool)currentUser::getCalendarCredentials();
 
-for ($i=0; $i < $this->data->days; $i++) {
-  if ( $i > 0) $seed->add( new DateInterval('P1D'));  ?>
-  <div data-date="<?= $seed->format( 'Y-m-d') ?>">
+for ($i = 0; $i < $this->data->days; $i++) {
+  if ($i > 0) $seed->add(new DateInterval('P1D'));  ?>
+  <div data-date="<?= $seed->format('Y-m-d') ?>">
     <div class="form-row mb-1">
       <div class="col bg-light py-2">
         <div class="d-flex">
-          <h5 class="flex-fill m-0 pt-2"><?= $seed->format( 'D M j') ?></h5>
+          <h5 class="flex-fill m-0 pt-2"><?= $seed->format('D M j') ?></h5>
           <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" id="<?= $_uid = strings::rand() ?>">
-            <?php if ( $haveCalendar) { ?>
-              <button type="button" class="btn btn-light" data-role="btn-calendar-add" data-date="<?= $seed->format( 'Y-m-d') ?>"><i class="bi bi-calendar-plus"></i></button>
+            <?php if ($haveCalendar) { ?>
+              <button type="button" class="btn btn-light" data-role="btn-calendar-add" data-date="<?= $seed->format('Y-m-d') ?>"><i class="bi bi-calendar-plus"></i></button>
 
-            <?php } // if ( $haveCalendar) { ?>
+            <?php } // if ( $haveCalendar) {
+            ?>
           </div>
-          <script>$(document).trigger('calendar-toolbar-created', '#<?= $_uid ?>');</script>
+          <script>
+            $(document).trigger('calendar-toolbar-created', '#<?= $_uid ?>');
+          </script>
 
         </div>
 
@@ -45,33 +48,35 @@ for ($i=0; $i < $this->data->days; $i++) {
 <?php
 }
 
-if ( $haveCalendar) { ?>
-<script>
-( _ => {
-  $('button[data-role="btn-calendar-add"]').each( (i, btn) => {
-    $(btn).on( 'click', function( e) {
-      e.stopPropagation();e.preventDefault();
+if ($haveCalendar) { ?>
+  <script>
+    (_ => {
+      $('button[data-role="btn-calendar-add"]').each((i, btn) => {
+        $(btn).on('click', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
 
-      let _me = $(this);
-      let _data = _me.data();
+          let _me = $(this);
+          let _data = _me.data();
 
-      _.get.modal( _.url( '<?= $this->route ?>/appointment'))
-      .then( modal => {
-        let d = _.dayjs( _data.date);
-        $('input[name="date"]', modal).val( d.format( 'YYYY-MM-DD'));
+          _.get.modal(_.url('<?= $this->route ?>/appointment'))
+            .then(modal => {
+              let d = _.dayjs(_data.date);
+              $('input[name="date"]', modal).val(d.format('YYYY-MM-DD'));
 
-        modal.on( 'success', e => $(document).trigger('load-active-feeds'));
+              modal.on('success', e => $(document).trigger('load-active-feeds'));
 
-        // console.log( _data);
+              // console.log( _data);
+
+            });
+
+        });
 
       });
 
-    });
-
-  });
-
-}) (_brayworth_);
-</script>
+    })(_brayworth_);
+  </script>
 
 <?php
-} // if ( $haveCalendar) { ?>
+} // if ( $haveCalendar) {
+?>

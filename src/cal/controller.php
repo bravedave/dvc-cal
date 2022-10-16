@@ -213,20 +213,18 @@ class controller extends \Controller {
   }
 
   public function agenda() {
+
     $seed = $this->getParam( 'seed');
     if ( strtotime( $seed) < 1) {
       $seed = date( 'Y-m-d');
-
     }
 
     $this->data = (object)[
       'seed' => $seed,
       'days' => 7
-
     ];
 
     $this->load( 'agenda');
-
   }
 
   public function widget() {
