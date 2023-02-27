@@ -12,7 +12,7 @@ namespace dvc\cal;
 
 use currentUser;
 use dvc\ews\calendaritem;
-use Json;
+use bravedave\dvc\json;
 use strings;
 
 class controller extends \Controller {
@@ -33,6 +33,7 @@ class controller extends \Controller {
       'secondary' => 'feeds',
       'data' => (object)[
         'searchFocus' => false,
+        'pageUrl' => strings::url($this->route)
       ],
     ]);
   }
@@ -47,11 +48,13 @@ class controller extends \Controller {
     $action = $this->getPost('action');
 
     if ('appointment-save' == $action) {
+
       $date = $this->getPost('date');
       $start = $this->getPost('start');
       $end = $this->getPost('end');
 
       if (strtotime($date) > 0) {
+
         $start = $date . ' ' . $start;
         $end = $date . ' ' . $end;
 
@@ -65,14 +68,18 @@ class controller extends \Controller {
         $app->endUTC = $end;
 
         if (dav\appointment::create($app)) {
-          Json::ack($action);
+
+          json::ack($action);
         } else {
-          Json::nak($action);
+
+          json::nak($action);
         }
       } else {
-        Json::nak($action);
+
+        json::nak($action);
       }
     } elseif ('get-active-feeds' == $action) {
+
       $a = [];
       foreach ($this->feeds as $feed) {
         if ('yes' == currentUser::option('cal-feed-' . $feed->name)) {
@@ -80,14 +87,16 @@ class controller extends \Controller {
         }
       }
 
-      Json::ack($action)
+      json::ack($action)
         ->add('data', $a);
     } elseif ('get-feed' == $action) {
+
       $name = $this->getPost('name');
       $type = $this->getPost('type');
       // \sys::logger( sprintf('<feed %s> %s', $type, __METHOD__));
 
       if ('dav' == $type) {
+
         if ($account = $this->getPost('account')) {
           $settings = false;
 
@@ -133,15 +142,16 @@ class controller extends \Controller {
               }
             }
 
-            Json::ack($action)
+            json::ack($action)
               ->add('data', $events);
             // \sys::logger( sprintf('<feed %s> %s', count( $events), __METHOD__));
 
           }
         } else {
-          Json::nak(sprintf('invalid account - %s', $action));
+          json::nak(sprintf('invalid account - %s', $action));
         }
       } elseif ('Australian Public Holidays' == $name) {
+
         $path = implode(DIRECTORY_SEPARATOR, [
           __DIR__,
           'data',
@@ -155,9 +165,10 @@ class controller extends \Controller {
         $reader = reader::readCSV($path);
         $feed = $reader->feed($start, $end);
 
-        Json::ack($action)
+        json::ack($action)
           ->add('data', $feed);
       } elseif ('Queensland Public Holidays' == $name) {
+
         $path = implode(DIRECTORY_SEPARATOR, [
           __DIR__,
           'data',
@@ -173,21 +184,26 @@ class controller extends \Controller {
           return 'qld' == $evt['location'];
         });
 
-        Json::ack($action)
+        json::ack($action)
           ->add('data', $feed);
       } else {
-        Json::nak(sprintf('%s - %s', $name, $action));
+
+        json::nak(sprintf('%s - %s', $name, $action));
       }
     } elseif ('toggle-feed' == $action) {
+
       if ($feed = $this->getPost('feed')) {
+
         $state = $this->getPost('state');
 
         currentUser::option('cal-feed-' . $feed, 'yes' == $state ? 'yes' : '');
-        Json::ack($action);
+        json::ack($action);
       } else {
-        Json::nak($action);
+
+        json::nak($action);
       }
     } else {
+
       parent::postHandler();
     }
   }
