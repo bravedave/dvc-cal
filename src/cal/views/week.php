@@ -30,7 +30,7 @@ $slots = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];  ?>
   for ($i = 0; $i < 7; $i++) {
     if ($i > 0) $seed->add(new DateInterval('P1D'));  ?>
 
-    <div class="col py-2">
+    <div class="col pt-2" data-date="<?= $seed->format('Y-m-d') ?>">
       <div class="d-flex">
         <h6 class="flex-fill my-0"><?= $seed->format('D jS') ?></h6>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"
