@@ -14,15 +14,14 @@ use DateTime;
 use DateInterval;
 use strings;
 
-
 $slots = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];  ?>
 
 <div class="form-row mb-1">
   <div class="col-1">
+
     <div class="row">
       <div class="col d-flex" ctrl-box></div>
     </div>
-
   </div>
 
   <?php
@@ -49,23 +48,24 @@ $slots = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];  ?>
 </div>
 
 <div class="form-row border-bottom d-none" style="min-height: 4rem;" day-slot>
-  <div class="col"></div>
+
+  <div class="col-1"></div>
 
   <?php
   $seed = new DateTime($this->data->seed);
   for ($i = 0; $i < 7; $i++) {
-    if ($i > 0) $seed->add(new DateInterval('P1D'));  ?>
+    if ($i > 0) $seed->add(new DateInterval('P1D'));
 
-    <div class="col py-2" style="width: 13.09%" data-date="<?= $seed->format('Y-m-d') ?>" data-slot="day">
-    </div>
-
-  <?php
+    printf(
+      '<div class="col py-2" style="width: 13.09%%" data-date="%s" data-slot="day"></div>',
+      $seed->format('Y-m-d')
+    );
   } ?>
-
 </div>
 
 <?php
 foreach ($slots as $slot) { ?>
+
   <div class="form-row border-bottom" style="min-height: 4rem;">
 
     <?php
@@ -78,15 +78,14 @@ foreach ($slots as $slot) { ?>
 
     $seed = new DateTime($this->data->seed);
     for ($i = 0; $i < 7; $i++) {
-      if ($i > 0) $seed->add(new DateInterval('P1D'));  ?>
+      if ($i > 0) $seed->add(new DateInterval('P1D'));
 
-      <div class="col py-2" style="width: 13.09%" data-date="<?= $seed->format('Y-m-d') ?>"
-        data-slot="<?= $slot ?>"></div>
-
-    <?php
+      printf(
+        '<div class="col py-2" style="width: 13.09%%" data-date="%s" data-slot="%s"></div>',
+        $seed->format('Y-m-d'),
+        $slot
+      );
     } ?>
-
   </div>
-
 <?php
-} ?>
+}
