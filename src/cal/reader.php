@@ -13,6 +13,7 @@ namespace dvc\cal;
 use ICal\ICal;
 use DateTime;
 use DateInterval;
+use DateTimeZone;
 use ParseCsv;
 
 class reader {
@@ -39,8 +40,8 @@ class reader {
 
       // \sys::dump( $event);
 
-      $date = new DateTime($event['Date'], new \DateTimeZone(config::$TIMEZONE));
-      $end = new DateTime($event['Date'], new \DateTimeZone(config::$TIMEZONE));
+      $date = new DateTime($event['Date'], new DateTimeZone(config::$TIMEZONE));
+      $end = new DateTime($event['Date'], new DateTimeZone(config::$TIMEZONE));
       $end->add(new DateInterval('P1D'));
 
       $id = sprintf('%s-%s@pub', $event['Date'], preg_replace('@[^a-z0-9]@i', '-', $event['Holiday Name']));
@@ -117,9 +118,9 @@ class reader {
       $description = str_replace('\,', ',', $description);
 
       $start = new DateTime(($event->dtstart));
-      $start->setTimezone(new \DateTimeZone(config::$TIMEZONE));
+      $start->setTimezone(new DateTimeZone(config::$TIMEZONE));
       $end = new DateTime(($event->dtend));
-      $end->setTimezone(new \DateTimeZone(config::$TIMEZONE));
+      $end->setTimezone(new DateTimeZone(config::$TIMEZONE));
 
       $reader->append([
         'summary' => $event->summary,
@@ -169,7 +170,8 @@ class reader {
         'location' => $event->location,
         'href' => $event->href ?? '',
         'description' => $event->notes,
-        'id' => $event->id
+        'id' => $event->id,
+        'cargo' => $event->cargo ?? '',
       ]);
     }
 
