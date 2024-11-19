@@ -22,19 +22,19 @@ class controller extends \Controller {
 
     $start = date('Y-m-d');
     $end = date('Y-m-d', strtotime('+7 days'));
+
     $this->data = (object)[
       'start' => $start,
       'end' => $end,
-      'feed' => []
+      'feed' => [],
+      'aside' => ['feeds'],
+      'pageUrl' => strings::url($this->route),
+      'searchFocus' => false,
+      'title' => $this->title = config::$WEBNAME,
     ];
 
-    $this->render([
-      'primary' => 'calendar',
-      'secondary' => 'feeds',
-      'data' => (object)[
-        'searchFocus' => false,
-        'pageUrl' => strings::url($this->route)
-      ],
+    $this->renderBS5([
+      'main' => fn() => $this->load('calendar')
     ]);
   }
 
@@ -70,19 +70,15 @@ class controller extends \Controller {
         if (dav\appointment::create($app)) {
 
           json::ack($action);
-        } else {
-
-          json::nak($action);
-        }
-      } else {
-
-        json::nak($action);
-      }
+        } else json::nak($action);
+      } else json::nak($action);
     } elseif ('get-active-feeds' == $action) {
 
       $a = [];
       foreach ($this->feeds as $feed) {
+
         if ('yes' == currentUser::option('cal-feed-' . $feed->name)) {
+
           $a[] = $feed;
         }
       }
@@ -147,16 +143,13 @@ class controller extends \Controller {
             // \sys::logger( sprintf('<feed %s> %s', count( $events), __METHOD__));
 
           }
-        } else {
-          json::nak(sprintf('invalid account - %s', $action));
-        }
+        } else json::nak(sprintf('invalid account - %s', $action));
       } elseif ('Australian Public Holidays' == $name) {
 
         $path = implode(DIRECTORY_SEPARATOR, [
           __DIR__,
           'data',
           'australian_public_holidays.csv'
-
         ]);
 
         $start = $this->getPost('start');
@@ -173,7 +166,6 @@ class controller extends \Controller {
           __DIR__,
           'data',
           'australian_public_holidays.csv'
-
         ]);
 
         $start = $this->getPost('start');
@@ -186,10 +178,7 @@ class controller extends \Controller {
 
         json::ack($action)
           ->add('data', $feed);
-      } else {
-
-        json::nak(sprintf('%s - %s', $name, $action));
-      }
+      } else json::nak(sprintf('%s - %s', $name, $action));
     } elseif ('toggle-feed' == $action) {
 
       if ($feed = $this->getPost('feed')) {
@@ -198,10 +187,7 @@ class controller extends \Controller {
 
         currentUser::option('cal-feed-' . $feed, 'yes' == $state ? 'yes' : '');
         json::ack($action);
-      } else {
-
-        json::nak($action);
-      }
+      } else json::nak($action);
     } else {
 
       parent::postHandler();
@@ -224,6 +210,7 @@ class controller extends \Controller {
   }
 
   public function widget() {
+
     $start = date('Y-m-d');
     $end = date('Y-m-d');
     $this->data = (object)[
@@ -231,7 +218,6 @@ class controller extends \Controller {
       'end' => $end,
       'feed' => [],
       'mode' => 'widget'
-
     ];
 
     $this->load('calendar');
@@ -252,45 +238,41 @@ class controller extends \Controller {
   }
 
   public function appointment() {
+
     $this->data = (object)[
       'title' => $this->title = 'Appointment'
-
     ];
 
     $this->load('appointment');
   }
 
   public function month() {
+
     $seed = $this->getParam('seed');
-    if (strtotime($seed) < 1) {
-      $seed = date('Y-m-d');
-    }
+    if (strtotime($seed) < 1) $seed = date('Y-m-d');
 
     $time = strtotime($seed);
     $seed = date('Y-m-01', $time);
 
     $this->data = (object)[
       'seed' => $seed
-
     ];
 
     $this->load('month');
   }
 
   public function week() {
+
     $seed = $this->getParam('seed');
-    if (strtotime($seed) < 1) {
-      $seed = date('Y-m-d');
-    }
+    if (strtotime($seed) < 1) $seed = date('Y-m-d');
+
 
     $time = strtotime($seed);
-    if (date('w', $time)) {
-      $seed = date('Y-m-d', strtotime('Last Sunday', $time));
-    }
+    if (date('w', $time)) $seed = date('Y-m-d', strtotime('Last Sunday', $time));
+
 
     $this->data = (object)[
       'seed' => $seed
-
     ];
 
     $this->load('week');

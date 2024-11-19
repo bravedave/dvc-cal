@@ -6,13 +6,39 @@
  *
  * MIT License
  *
-*/
+ * replace:
+ * [x] data-dismiss => data-bs-dismiss
+ * [x] data-toggle => data-bs-toggle
+ * [x] data-content => data-bs-content
+ * [x] data-title => data-bs-title
+ * [x] data-trigger => data-bs-trigger
+ * [x] data-html => data-bs-html
+ * [x] data-parent => data-bs-parent
+ * [x] text-right => text-end
+ * [x] custom-select - form-select
+ * [x] mr-* => me-*
+ * [x] ml-* => ms-*
+ * [x] pr-* => pe-*
+ * [x] pl-* => ps-*
+ * [x] badge-pill rounded-pill
+ * [x] badge-primary text-bg-primary
+ * [x] badge-warning text-bg-warning
+ * [x] font-weight-bold => fw-bold
+ * [x] font-italic => fst-italic
+ * [x] input-group-prepend - remove
+ * [x] input-group-append - remove
+ * [x] btn input-group-text => btn btn-light
+ * [x] form-row => row g-2
+ * [x] form-group => mb-2
+ * [x] class="close" => class="btn-close"
+ */
 
 namespace dvc\cal;
 
 use strings;
 
-$_accordion = strings::rand();  ?>
+$_accordion = strings::rand();
+extract((array)$this->data); ?>
 <style>
   @media print {
     @page {
@@ -22,65 +48,76 @@ $_accordion = strings::rand();  ?>
 
   @media (max-width: 575.98px) {
     #<?= $_accordion ?>-date {
+      appearance: none;
       -webkit-appearance: none;
     }
   }
 </style>
 <nav class="d-print-none d-none" id="<?= $_accordion ?>-nav">
+
   <div class="nav nav-tabs" role="tablist" id="<?= $_accordion ?>-tablist">
+
     <div class="nav-item">
+
       <div class="input-group">
-        <div class="input-group-append">
-          <button type="button" class="btn input-group-text" title="last week" id="<?= $_accordion ?>-date-last-monday"><i class="bi bi-chevron-left"></i></button>
 
-        </div>
+        <button type="button" class="btn btn-light" title="last week"
+          id="<?= $_accordion ?>-date-last-monday">
+          <i class="bi bi-chevron-left"></i></button>
 
-        <input type="date" class="form-control" autofocus id="<?= $_accordion ?>-date" value="<?= $this->data->start ?>">
+        <input type="date" class="form-control"
+          id="<?= $_accordion ?>-date"
+          value="<?= $start ?>" autofocus>
 
-        <div class="input-group-append">
-          <button type="button" class="btn input-group-text" title="reload" id="<?= $_accordion ?>-date-refresh"><i class="bi bi-arrow-repeat"></i></button>
+        <button type="button" class="btn btn-light" title="reload"
+          id="<?= $_accordion ?>-date-refresh">
+          <i class="bi bi-arrow-repeat"></i></button>
 
-        </div>
+        <button type="button" class="btn btn-light" title="next week"
+          id="<?= $_accordion ?>-date-next-monday">
+          <i class="bi bi-chevron-right"></i></button>
 
-        <div class="input-group-append">
-          <button type="button" class="btn input-group-text" title="next week" id="<?= $_accordion ?>-date-next-monday"><i class="bi bi-chevron-right"></i></button>
-
-        </div>
-
-        <div class="input-group-append">
-          <button type="button" class="btn input-group-text" title="in two weeks" id="<?= $_accordion ?>-date-next-monday-week"><i class="bi bi-chevron-double-right"></i></button>
-
-        </div>
-
+        <button type="button" class="btn btn-light" title="in two weeks"
+          id="<?= $_accordion ?>-date-next-monday-week">
+          <i class="bi bi-chevron-double-right"></i></button>
       </div>
-
     </div>
 
-    <a class="nav-link d-none d-lg-block small ml-auto" data-toggle="tab" data-format="agenda" href="#<?= $_accordion ?>-agenda-tab" id="<?= $_accordion ?>-agenda" aria-selected="false" aria-controls="<?= $_accordion ?>-agenda-tab">
+    <a class="nav-link d-none d-lg-block small ms-auto" data-bs-toggle="tab"
+      data-format="agenda" href="#<?= $_accordion ?>-agenda-tab" id="<?= $_accordion ?>-agenda"
+      aria-selected="false" aria-controls="<?= $_accordion ?>-agenda-tab">
       Agenda
     </a>
 
-    <a class="nav-link d-none d-lg-block small" data-toggle="tab" data-format="week" href="#<?= $_accordion ?>-week-tab" id="<?= $_accordion ?>-week" aria-selected="false" aria-controls="<?= $_accordion ?>-week-tab">
+    <a class="nav-link d-none d-lg-block small" data-bs-toggle="tab" data-format="week"
+      href="#<?= $_accordion ?>-week-tab" id="<?= $_accordion ?>-week" aria-selected="false"
+      aria-controls="<?= $_accordion ?>-week-tab">
       Week
     </a>
 
-    <a class="nav-link d-none d-lg-block small" data-toggle="tab" data-format="month" href="#<?= $_accordion ?>-month-tab" id="<?= $_accordion ?>-month" aria-selected="false" aria-controls="<?= $_accordion ?>-month-tab">
+    <a class="nav-link d-none d-lg-block small" data-bs-toggle="tab" data-format="month"
+      href="#<?= $_accordion ?>-month-tab" id="<?= $_accordion ?>-month" aria-selected="false"
+      aria-controls="<?= $_accordion ?>-month-tab">
       Month
     </a>
 
-    <a class="nav-link d-none small" data-toggle="tab" data-format="widget" href="#<?= $_accordion ?>-widget-tab" id="<?= $_accordion ?>-widget" aria-selected="false" aria-controls="<?= $_accordion ?>-widget-tab">
+    <a class="nav-link d-none small" data-bs-toggle="tab" data-format="widget"
+      href="#<?= $_accordion ?>-widget-tab" id="<?= $_accordion ?>-widget" aria-selected="false"
+      aria-controls="<?= $_accordion ?>-widget-tab">
       Widget
     </a>
-
   </div>
-
 </nav>
 
 <div class="tab-content">
-  <div id="<?= $_accordion ?>-agenda-tab" class="tab-pane fade" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-agenda"></div>
-  <div id="<?= $_accordion ?>-week-tab" class="tab-pane fade small" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-week"></div>
-  <div id="<?= $_accordion ?>-month-tab" class="tab-pane fade small" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-month"></div>
-  <div id="<?= $_accordion ?>-widget-tab" class="tab-pane fade" role="tabpanel" aria-labeled-by="#<?= $_accordion ?>-widget"></div>
+  <div id="<?= $_accordion ?>-agenda-tab" class="tab-pane fade" role="tabpanel"
+    aria-labeled-by="#<?= $_accordion ?>-agenda"></div>
+  <div id="<?= $_accordion ?>-week-tab" class="tab-pane fade small" role="tabpanel"
+    aria-labeled-by="#<?= $_accordion ?>-week"></div>
+  <div id="<?= $_accordion ?>-month-tab" class="tab-pane fade small" role="tabpanel"
+    aria-labeled-by="#<?= $_accordion ?>-month"></div>
+  <div id="<?= $_accordion ?>-widget-tab" class="tab-pane fade" role="tabpanel"
+    aria-labeled-by="#<?= $_accordion ?>-widget"></div>
 
 </div>
 <script>
@@ -103,63 +140,59 @@ $_accordion = strings::rand();  ?>
 
     }
 
-    let getFeed = (feed, tab) => {
-      return new Promise(resolve => {
-        if (/post/i.test(String(feed.method))) {
-          let _data = tab.data();
+    
+    let getFeed = (feed, tab) => new Promise(resolve => {
+      
+      if (/post/i.test(String(feed.method))) {
+        
+        let _data = tab.data();
+        let date = _.dayjs($('#<?= $_accordion ?>-date').val());
+        let edate = date.add('7', 'days');
 
-          let date = _.dayjs($('#<?= $_accordion ?>-date').val());
-          let edate = date.add('7', 'days');
-          if ('week' == _data.format) {
-            date = date.day(0);
-            edate = date.add('7', 'days');
+        if ('week' == _data.format) {
 
-          } else if ('month' == _data.format) {
-            date = date.date(1);
-            edate = date.add('1', 'month').date(0);
+          date = date.day(0);
+          edate = date.add('7', 'days');
+        } else if ('month' == _data.format) {
 
-          } else if ('widget' == _data.format) {
-            date = date;
-            edate = date.add('1', 'days');
+          date = date.date(1);
+          edate = date.add('1', 'month').date(0);
+        } else if ('widget' == _data.format) {
 
-          }
-
-          let data = !!feed.data ? JSON.parse(feed.data) : {};
-          data.action = 'get-feed';
-          data.name = feed.name;
-          data.start = date.format('YYYY-MM-DD');
-          data.end = edate.format('YYYY-MM-DD');
-
-          // console.table( data);
-
-          // console.log( feed.name, feed.url);
-          _.post({
-            url: feed.url,
-            data: data,
-
-          }).then(d => {
-            if ('ack' == d.response) {
-              // console.log( d.data);
-              $.each(d.data, (i, event) => tab.trigger('event-add', {
-                event: event,
-                feed: feed
-              }));
-
-            }
-
-            resolve();
-
-          });
-
+          date = date;
+          edate = date.add('1', 'days');
         }
 
-      });
+        let data = !!feed.data ? JSON.parse(feed.data) : {};
+        data.action = 'get-feed';
+        data.name = feed.name;
+        data.start = date.format('YYYY-MM-DD');
+        data.end = edate.format('YYYY-MM-DD');
 
-    };
+        // console.table( data);
+        // console.log( feed.name, feed.url);
+
+        _.fetch.post(feed.url, data).then(d => {
+
+          if ('ack' == d.response) {
+
+            // console.log( d.data);
+            $.each(d.data, (i, event) => tab.trigger('event-add', {
+              event: event,
+              feed: feed
+            }));
+          }
+
+          resolve();
+        });
+      }
+    });
+
+
 
     let agendaRowMaker = (p, date, edate, allDay) => {
 
-      let row = $('<div class="form-row border pointer-calendar" item></div>');
+      let row = $('<div class="row g-2 border pointer-calendar" item></div>');
       row
         .data('data', p)
         .data('time', date.format('YYYY-MM-DD hh:mm'))
@@ -195,15 +228,18 @@ $_accordion = strings::rand();  ?>
       }
 
       let fmtEnd = 0 == edate.minute() ? edate.format('h a') : edate.format('h:mm');
-      let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' + fmtEnd);
+      let timeLabel = allDay ? 'all day' : (isEvent ? fmtStart : fmtStart + ' - ' +
+        fmtEnd);
       $('<div class="col-3 col-xl-2 py-1 text-truncate"></div>')
         .html(timeLabel)
         .appendTo(row);
 
-      $('<div class="col-auto small pt-1"><i class="bi bi-square-fill"></i></div>').css('color', p.feed.color).appendTo(row);
+      $('<div class="col-auto small pt-1"><i class="bi bi-square-fill"></i></div>')
+        .css('color', p.feed.color).appendTo(row);
 
       $('<div class="col"></div>')
-        .html(String(p.event.summary).replace(/loc:/, '<i class="bi bi-geo-alt-fill mr-1 small text-muted"></i>'))
+        .html(String(p.event.summary).replace(/loc:/,
+          '<i class="bi bi-geo-alt-fill me-1 small text-muted"></i>'))
         .appendTo(row);
 
       return row;
@@ -219,7 +255,8 @@ $_accordion = strings::rand();  ?>
         let tab = $('#<?= $_accordion ?>-widget-tab');
         let date = _.dayjs(p.event.start);
         let edate = _.dayjs(p.event.end);
-        let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format('YYYYMMDD');
+        let allDay = (date.unix() + 86400) == edate.unix() || date.format(
+          'YYYYMMDD') != edate.format('YYYYMMDD');
 
         let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
         if (allDay) {
@@ -239,7 +276,8 @@ $_accordion = strings::rand();  ?>
           if (date.format('YYYYMMDD') != edate.format('YYYYMMDD')) {
             for (let i = 1; i < 30; i++) {
               let _date = date.add(i, 'days');
-              if (_date.format('YYYYMMDD') == edate.format('YYYYMMDD') && '0000' == edate.format('HHmm')) break;
+              if (_date.format('YYYYMMDD') == edate.format('YYYYMMDD') && '0000' ==
+                edate.format('HHmm')) break;
               if (_date.format('YYYYMMDDHHmm') > edate.format('YYYYMMDDHHmm')) break;
 
               key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"]';
@@ -313,7 +351,8 @@ $_accordion = strings::rand();  ?>
       })
       .on('show.bs.tab', function(e) {
         $('#<?= $_accordion ?>-nav').addClass('d-none');
-        $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
+        $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week')
+          .addClass('d-none');
         $(this).trigger('update-tab');
 
       })
@@ -330,7 +369,8 @@ $_accordion = strings::rand();  ?>
         let tab = $('#<?= $_accordion ?>-agenda-tab');
         let date = _.dayjs(p.event.start);
         let edate = _.dayjs(p.event.end);
-        let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format('YYYYMMDD');
+        let allDay = (date.unix() + 86400) == edate.unix() || date.format(
+          'YYYYMMDD') != edate.format('YYYYMMDD');
 
         let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"]';
         if (allDay) {
@@ -351,7 +391,8 @@ $_accordion = strings::rand();  ?>
             // console.log( date.format('YYYY-MM-DD HH:mm'), edate.format('YYYY-MM-DD HH:mm'));
             for (let i = 1; i < 30; i++) {
               let _date = date.add(i, 'days');
-              if (_date.format('YYYYMMDD') == edate.format('YYYYMMDD') && '0000' == edate.format('HHmm')) break;
+              if (_date.format('YYYYMMDD') == edate.format('YYYYMMDD') && '0000' ==
+                edate.format('HHmm')) break;
               if (_date.format('YYYYMMDDHHmm') > edate.format('YYYYMMDDHHmm')) break;
 
               key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"]';
@@ -422,7 +463,8 @@ $_accordion = strings::rand();  ?>
       })
       .on('show.bs.tab', function(e) {
         $('#<?= $_accordion ?>-nav').removeClass('d-none');
-        $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').removeClass('d-none');
+        $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week')
+          .removeClass('d-none');
         $(this).trigger('update-tab');
 
       })
@@ -439,10 +481,11 @@ $_accordion = strings::rand();  ?>
         let date = _.dayjs(p.event.start);
         // console.log( date.format('YYYY-MM-DD h:mm a'))
         let edate = _.dayjs(p.event.end);
-        let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format('YYYYMMDD');
+        let allDay = (date.unix() + 86400) == edate.unix() || date.format(
+          'YYYYMMDD') != edate.format('YYYYMMDD');
 
         let rowMaker = (p, date, edate, allDay) => {
-          let row = $('<div class="form-row pointer-calendar border" item></div>');
+          let row = $('<div class="row g-2 pointer-calendar border" item></div>');
 
           row
             .attr('style', 'border-left: 3px solid ' + p.feed.color + '!important')
@@ -483,18 +526,21 @@ $_accordion = strings::rand();  ?>
 
         // console.log( date.format('YYYY-MM-DD'), edate.format('YYYY-MM-DD'));
         if (allDay) {
-          let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="day"]';
+          let key = 'div[data-date="' + date.format('YYYY-MM-DD') +
+            '"][data-slot="day"]';
           $(key, tab).append(rowMaker(p, date, edate, allDay));
 
           // console.log( date.format('YYYY-MM-DD'), edate.format('YYYY-MM-DD'));
           if (date.format('YYYYMMDD') != edate.format('YYYYMMDD')) {
             for (let i = 1; i < 30; i++) {
               let _date = date.add(i, 'days');
-              if (_date.format('YYYYMMDD') == edate.format('YYYYMMDD') && '0000' == edate.format('HHmm')) break;
+              if (_date.format('YYYYMMDD') == edate.format('YYYYMMDD') && '0000' ==
+                edate.format('HHmm')) break;
               if (_date.format('YYYYMMDDHHmm') > edate.format('YYYYMMDDHHmm')) break;
 
               // console.log( _date.format('YYYY-MM-DD'));
-              key = 'div[data-date="' + _date.format('YYYY-MM-DD') + '"][data-slot="day"]';
+              key = 'div[data-date="' + _date.format('YYYY-MM-DD') +
+                '"][data-slot="day"]';
               $(key, tab).append(rowMaker(p, _date, edate, allDay));
 
             }
@@ -504,7 +550,8 @@ $_accordion = strings::rand();  ?>
           $('[day-slot]', tab).removeClass('d-none');
 
         } else {
-          let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' + date.format('H') + '"]';
+          let key = 'div[data-date="' + date.format('YYYY-MM-DD') + '"][data-slot="' +
+            date.format('H') + '"]';
           let container = $(key, tab);
           // insert at correct location
           let before = false;
@@ -547,7 +594,8 @@ $_accordion = strings::rand();  ?>
               e.stopPropagation();
               e.preventDefault();
 
-              $('#<?= $_accordion ?>-date').val(date.add('-7', 'days').format('YYYY-MM-DD'));
+              $('#<?= $_accordion ?>-date').val(date.add('-7', 'days').format(
+                'YYYY-MM-DD'));
               _me.trigger('update-tab');
 
             })
@@ -558,7 +606,8 @@ $_accordion = strings::rand();  ?>
               e.stopPropagation();
               e.preventDefault();
 
-              $('#<?= $_accordion ?>-date').val(date.add('7', 'days').format('YYYY-MM-DD'));
+              $('#<?= $_accordion ?>-date').val(date.add('7', 'days').format(
+                'YYYY-MM-DD'));
               _me.trigger('update-tab');
 
             })
@@ -588,7 +637,8 @@ $_accordion = strings::rand();  ?>
       })
       .on('show.bs.tab', function(e) {
         $('#<?= $_accordion ?>-nav').removeClass('d-none');
-        $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
+        $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week')
+          .addClass('d-none');
         $(this).trigger('update-tab');
 
       })
@@ -603,10 +653,11 @@ $_accordion = strings::rand();  ?>
         let tab = $('#<?= $_accordion ?>-month-tab');
         let date = _.dayjs(p.event.start);
         let edate = _.dayjs(p.event.end);
-        let allDay = (date.unix() + 86400) == edate.unix() || date.format('YYYYMMDD') != edate.format('YYYYMMDD');
+        let allDay = (date.unix() + 86400) == edate.unix() || date.format(
+          'YYYYMMDD') != edate.format('YYYYMMDD');
 
         let rowMaker = (p, date, edate, allDay) => {
-          let row = $('<div class="form-row border" item></div>');
+          let row = $('<div class="row g-2 border" item></div>');
           // .css( 'color', !!p.feed.forecolor ? p.feed.forecolor : '#000')
           // .css( 'background-color', p.feed.color)
           row
@@ -673,7 +724,8 @@ $_accordion = strings::rand();  ?>
           if (date.format('YYYYMMDD') != edate.format('YYYYMMDD')) {
             for (let i = 1; i < 30; i++) {
               let _date = date.add(i, 'days');
-              if (_date.format('YYYYMMDD') == edate.format('YYYYMMDD') && '0000' == edate.format('HHmm')) break;
+              if (_date.format('YYYYMMDD') == edate.format('YYYYMMDD') && '0000' ==
+                edate.format('HHmm')) break;
               if (_date.format('YYYYMMDDHHmm') > edate.format('YYYYMMDDHHmm')) break;
 
               // console.log( _date.format('YYYY-MM-DD'));
@@ -728,7 +780,8 @@ $_accordion = strings::rand();  ?>
               e.stopPropagation();
               e.preventDefault();
 
-              $('#<?= $_accordion ?>-date').val(date.add('-1', 'month').format('YYYY-MM-DD'));
+              $('#<?= $_accordion ?>-date').val(date.add('-1', 'month').format(
+                'YYYY-MM-DD'));
               _me.trigger('update-tab');
 
             })
@@ -739,7 +792,8 @@ $_accordion = strings::rand();  ?>
               e.stopPropagation();
               e.preventDefault();
 
-              $('#<?= $_accordion ?>-date').val(date.add('1', 'month').format('YYYY-MM-DD'));
+              $('#<?= $_accordion ?>-date').val(date.add('1', 'month').format(
+                'YYYY-MM-DD'));
               _me.trigger('update-tab');
 
             })
@@ -748,7 +802,7 @@ $_accordion = strings::rand();  ?>
           $('div[data-date]', tab).each((i, el) => {
             let _me = $(el);
             let _data = _me.data();
-            $('<i class="bi bi-calendar-date pointer ml-auto"></i>')
+            $('<i class="bi bi-calendar-date pointer ms-auto"></i>')
               .on('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -785,7 +839,8 @@ $_accordion = strings::rand();  ?>
       })
       .on('show.bs.tab', function(e) {
         $('#<?= $_accordion ?>-nav').removeClass('d-none');
-        $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week').addClass('d-none');
+        $('#<?= $_accordion ?>-date-last-monday, #<?= $_accordion ?>-date-next-monday, #<?= $_accordion ?>-date-next-monday-week')
+          .addClass('d-none');
         $(this).trigger('update-tab');
 
       })
@@ -804,7 +859,7 @@ $_accordion = strings::rand();  ?>
         } else {
           // console.log( 'update-active-tab');
           <?php
-          if (isset($this->data->mode) && 'widget' == $this->data->mode) {
+          if (isset($mode) && 'widget' == $mode) {
             printf('$(\'#%s-widget\').tab(\'show\')', $_accordion);
           } else {
             printf('$(\'#%s-agenda\').tab(\'show\')', $_accordion);
@@ -906,7 +961,8 @@ $_accordion = strings::rand();  ?>
 
     });
 
-    $(document).on('calendar-refresh', e => $('#<?= $_accordion ?>-tablist').trigger('update-active-tab'));
+    $(document).on('calendar-refresh', e => $('#<?= $_accordion ?>-tablist').trigger(
+      'update-active-tab'));
     $(document).ready(() => $(document).trigger('load-active-feeds'));
 
     // console.log( 'done ..');
