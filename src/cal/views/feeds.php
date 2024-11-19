@@ -80,7 +80,7 @@ extract((array)$this->data); ?>
             printf(' <strong>%s</strong>', $feed->name);
           } else {
 
-            printf(' <span>%s</span>', $feed->name);
+            printf(' <span>%s</span>', $feed->label ?? $feed->name);
           } ?>
         </a>
       </div>
@@ -91,7 +91,7 @@ extract((array)$this->data); ?>
 </div>
 <script>
   (_ => {
-    const feelist = $('#<?= $_feedlist ?>');
+    const feedlist = $('#<?= $_feedlist ?>');
 
     feedlist.find('a.nav-link[data-name]').each((i, feed) => {
 
