@@ -58,7 +58,7 @@ $slots = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];  ?>
 
     <div class="col" data-date="<?= $ds->format('Y-m-d') ?>">
       <div class="d-flex">
-        <h6 class="flex-fill mt-2 mb-0"><?= $ds->format('D j') ?><sup><?= $ds->format('S') ?></sup></h6>
+        <h6 class="flex-fill mt-2 mb-0 small"><?= $ds->format('D j') ?><sup><?= $ds->format('S') ?></sup></h6>
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
           <div class="btn-group btn-group-sm" role="group" aria-label="small button group"
             id="<?= $_uid = strings::rand() ?>">
